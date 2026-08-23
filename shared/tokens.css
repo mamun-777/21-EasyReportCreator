@@ -1,0 +1,34 @@
+/* EasyReportCreator — light design tokens (Soft SaaS 2026)
+   Keep in sync with app/static/styles.css :root and website/assets/styles.css */
+
+:root {
+  color-scheme: light;
+  --bg: #eef2f6;
+  --bg-soft: #e4eaf0;
+  --panel: #ffffff;
+  --panel-2: #f7f9fb;
+  --border: #d5dde5;
+  --border-strong: #b8c5d0;
+  --hairline: #e8eef3;
+  --text: #0f1c24;
+  --muted: #5a6d7a;
+  --accent: #0b7d92;
+  --accent-dim: #096677;
+  --accent-soft: #e6f5f8;
+  --accent-on: #ffffff;
+  --success: #1a8f6a;
+  --success-soft: rgba(26, 143, 106, 0.1);
+  --warn: #b7791f;
+  --warn-soft: rgba(183, 121, 31, 0.1);
+  --danger: #c45b6a;
+  --danger-soft: rgba(196, 91, 106, 0.1);
+  --old: #c45b6a;
+  --shadow-sm: 0 1px 2px rgba(15, 28, 36, 0.05);
+  --shadow: 0 1px 2px rgba(15, 28, 36, 0.04), 0 8px 24px rgba(15, 28, 36, 0.06);
+  --radius: 10px;
+  --radius-sm: 6px;
+  /* Exact stack from propertiesmanager.nl */
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+}

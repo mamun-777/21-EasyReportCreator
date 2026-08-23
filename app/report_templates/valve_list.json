@@ -1,0 +1,43 @@
+{
+  "id": "valve_list",
+  "name": "Valve List",
+  "name_nl": "Afsluiterlijst",
+  "source": "valves",
+  "description": "Hand valves from HandValves + Vitens engineering properties, with line number from the connected pipe.",
+  "sort": ["Tag"],
+  "include_pnpid": true,
+  "header": {
+    "company": "Vitens",
+    "title": "Afsluiterlijst / Valve List",
+    "document_number": "MN-P-RHN-PID-0001-AL",
+    "revision": "A",
+    "date": "2026-08-19"
+  },
+  "revision_table": [
+    {
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
+      "checked": "",
+      "approved": ""
+    }
+  ],
+  "columns": [
+    {"key": "Tag", "header": "Tag", "width": 24, "visible": true},
+    {"key": "ObjectType", "header": "Objectsoort", "width": 22, "visible": true},
+    {"key": "Omschrijving", "header": "Omschrijving", "width": 22, "visible": true},
+    {"key": "Size", "header": "Maat", "width": 10, "visible": true},
+    {"key": "NONC", "header": "NO/NC", "width": 10, "visible": true},
+    {"key": "Actuation", "header": "Bediening", "width": 18, "visible": true},
+    {"key": "LineNumber", "header": "Leidingnr", "width": 14, "visible": true},
+    {"key": "Service", "header": "Service", "width": 14, "visible": true},
+    {"key": "Medium", "header": "Medium", "width": 12, "visible": true},
+    {"key": "Material", "header": "Materiaal", "width": 12, "visible": true},
+    {"key": "Procesdeel", "header": "Procesdeel", "width": 12, "visible": true},
+    {"key": "Procesmodule", "header": "Procesmodule", "width": 14, "visible": true},
+    {"key": "PnID", "header": "Blad", "width": 10, "visible": true},
+    {"key": "Area", "header": "Procesopstal", "width": 16, "visible": true},
+    {"key": "Remarks", "header": "Opmerking", "width": 20, "visible": true}
+  ]
+}

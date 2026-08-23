@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>EasyReportCreator — Plant 3D lists without Report Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css?v=20260823c" />
+</head>
+<body class="app">
+  <header class="app-header">
+    <a href="/" class="logo">
+      <span class="mark" aria-hidden="true"></span>
+      EasyReport<span class="dim">Creator</span>
+    </a>
+    <p class="app-tagline">Plant 3D reports · local app</p>
+  </header>
+
+  <div class="app-shell">
+    <aside class="app-sidebar panel">
+      <div class="panel-bar">
+        <span class="key" id="lbl-project">Project</span>
+        <span class="file">ProcessPower.dcf</span>
+      </div>
+      <div class="sidebar-body">
+        <div class="project-card" id="project-card">
+          <p class="muted" id="project-empty">No project open</p>
+        </div>
+        <div class="open-row">
+          <input id="project-path" type="text" spellcheck="false" placeholder="Path to Plant 3D folder…" />
+          <button id="btn-open" class="btn primary" type="button">Open</button>
+        </div>
+
+        <div class="nav-label" id="lbl-lists">Lists</div>
+        <nav id="template-nav" class="template-nav"></nav>
+
+        <p class="sidebar-foot" id="foot-note">Reads ProcessPower.dcf (SQLite). No AutoCAD licence required for listing.</p>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Report preview</p>
+          <h1 id="report-title">Select a list</h1>
+          <p class="subtitle" id="report-sub">Open a Plant 3D project folder, then choose a list.</p>
+        </div>
+        <div class="actions">
+          <button id="btn-header" class="btn ghost" type="button">Header setup</button>
+          <label class="file-btn btn ghost">
+            <input id="logo-file" type="file" accept=".png,.jpg,.jpeg" hidden />
+            <span id="btn-logo">Upload logo</span>
+          </label>
+          <button id="btn-save-tpl" class="btn ghost" type="button">Save template</button>
+          <label class="file-btn btn ghost">
+            <input id="import-file" type="file" accept=".xlsx,.xlsm" hidden />
+            <span id="btn-import">Import Excel</span>
+          </label>
+          <button id="btn-export" class="btn primary" type="button">Export Excel</button>
+        </div>
+      </header>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="sheet panel">
+        <div class="sheet-head" id="sheet-head">
+          <div class="titleblock">
+            <div class="tb-logo" id="tb-logo">
+              <img id="tb-logo-img" alt="Company logo" hidden />
+              <span id="tb-logo-placeholder">LOGO</span>
+            </div>
+            <div class="tb-meta">
+              <h2 id="tb-title">—</h2>
+              <dl id="tb-fields">
+                <div><dt>Project</dt><dd id="tb-project">—</dd></div>
+                <div><dt>Document</dt><dd id="tb-doc">—</dd></div>
+                <div><dt>Revision</dt><dd id="tb-rev">—</dd></div>
+              </dl>
+            </div>
+            <table class="rev-table" id="rev-table">
+              <thead>
+                <tr><th>Rev</th><th>Date</th><th>Description</th><th>Drawn</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="toolbar">
+            <input id="search" type="search" placeholder="Filter rows…" />
+            <span class="count" id="row-count"></span>
+          </div>
+        </div>
+        <div class="grid-wrap">
+          <table class="grid" id="grid">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="header-dialog">
+    <form method="dialog" class="dialog panel">
+      <div class="panel-bar">
+        <span class="key" id="header-title">Header setup</span>
+        <span class="file">Project Details</span>
+      </div>
+      <div class="dialog-body">
+        <p class="muted">Choose Project Details fields for the title block. Values come from ProcessPower.dcf.</p>
+        <div class="header-grid">
+          <section>
+            <h4>Title block fields</h4>
+            <div id="header-field-groups" class="field-groups"></div>
+          </section>
+          <section>
+            <h4>Issue details</h4>
+            <label class="field-row"><span>Title</span><input id="hdr-title" type="text" /></label>
+            <label class="field-row"><span>Document no.</span><input id="hdr-doc" type="text" /></label>
+            <label class="field-row"><span>Revision</span><input id="hdr-rev" type="text" /></label>
+            <label class="field-row"><span>Date</span><input id="hdr-date" type="date" /></label>
+            <label class="field-row"><span>Company</span><input id="hdr-company" type="text" /></label>
+            <h4>Revision table</h4>
+            <div class="rev-editor-wrap">
+              <table class="grid rev-editor" id="rev-editor">
+                <thead>
+                  <tr><th>Rev</th><th>Date</th><th>Description</th><th>Drawn</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <button id="hdr-add-rev" type="button" class="btn ghost">Add row</button>
+          </section>
+        </div>
+        <menu>
+          <button value="cancel" id="header-cancel" class="btn ghost">Cancel</button>
+          <button id="header-apply" class="btn primary" value="default" type="button">Apply to list</button>
+        </menu>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="diff-dialog">
+    <form method="dialog" class="dialog panel">
+      <div class="panel-bar">
+        <span class="key" id="diff-title">Import preview</span>
+        <span class="file">Excel diff</span>
+      </div>
+      <div class="dialog-body">
+        <p id="diff-summary" class="muted"></p>
+        <div class="diff-wrap">
+          <table class="grid" id="diff-grid">
+            <thead>
+              <tr><th>PnPID</th><th>Tag</th><th>Field</th><th>Current</th><th>Imported</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <menu>
+          <button value="cancel" id="diff-cancel" class="btn ghost">Cancel</button>
+          <button id="diff-apply" class="btn primary" value="default" type="button">Write to demo copy</button>
+        </menu>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

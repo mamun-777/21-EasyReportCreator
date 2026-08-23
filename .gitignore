@@ -1,0 +1,100 @@
+# =============================================================================
+# EasyReportCreator — keep the repo source-only; large/local assets stay local
+# =============================================================================
+
+# --- Plant 3D project folders (copy locally; ~60 MB+ per project) ---
+samples/*
+!samples/README.md
+
+# --- Reference material (correspondence, demo video) ---
+reference/correspondence/
+reference/media/
+
+# Chat exports (may appear outside reference/)
+*[Cc]hat*[Hh]istory*
+*chat*history*
+
+# --- Report app runtime data (state, logo, exports) ---
+app/data/*
+!app/data/.gitkeep
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# --- Generated Excel exports ---
+*.xlsx
+
+# --- Plant 3D / AutoCAD binaries (if placed outside samples/) ---
+*.dcf
+*.dwg
+*.bak
+*.dwt
+*.dwl
+*.dwl2
+*.pcf
+*.isf
+Project.xml.lock
+projSymbolStyle.bak
+
+# Safe demo write-back copy (never commit real project DCF)
+*demo-writeback*
+
+# --- Office binaries (markdown sources in docs/ are kept) ---
+*.docx
+*.doc
+~$*
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Editors & IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# --- Logs & temp ---
+*.log
+*.tmp
+*.temp
+.cache/
+
+# --- PHP / web (local preview artefacts) ---
+vendor/
+
+# --- Archives (manual drops, backups) ---
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
