@@ -47,14 +47,15 @@ def find_dcf(project_dir: Path) -> Path:
 
 
 def connect(dcf_path: Path) -> sqlite3.Connection:
-    uri = f"file:{dcf_path.as_posix()}?mode=ro"
+    path = Path(dcf_path).resolve()
+    uri = f"file:{path.as_posix()}?mode=ro"
     con = sqlite3.connect(uri, uri=True)
     con.row_factory = sqlite3.Row
     return con
 
 
 def connect_rw(dcf_path: Path) -> sqlite3.Connection:
-    con = sqlite3.connect(dcf_path)
+    con = sqlite3.connect(Path(dcf_path).resolve())
     con.row_factory = sqlite3.Row
     return con
 

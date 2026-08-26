@@ -17,8 +17,11 @@ Open http://127.0.0.1:8765 — the sample project path is filled in automaticall
 ## Current capabilities
 
 - Open a Plant 3D project folder (no AutoCAD licence needed for listing)
-- Eight list types with saved templates / company standards
-- Excel export with logo placeholder, title block and revision table
+- **Project Details header catalogue** (`GET /api/project/details`): standard Autodesk fields + user-defined categories (S88 on the Rhenen sample), grouped for the title-block picker
+- **Class property catalogue** (WP3): Engineering Items tree (`GET /api/project/class-tree`) and per-class / per-list properties (`GET /api/project/classes/{name}/properties`, `GET /api/project/property-catalogue?source=valves`)
+- **Header setup UI**: pick title-block fields, edit issue details, logo upload, revision table — Apply persists to the active template (preview + Excel export)
+- Eight list types with saved templates / company standards (header.fields seeded)
+- Excel export with logo, title block and revision table
 - Excel import preview; write-back goes to `ProcessPower.demo-writeback.dcf` only (not in Version 1 scope)
 
 ## Notes

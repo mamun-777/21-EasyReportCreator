@@ -642,8 +642,19 @@ dialog {
   border: 0;
   padding: 0;
   width: min(920px, 94vw);
+  max-height: min(90vh, 880px);
   background: transparent;
   color: var(--text);
+  /* Global * reset clears UA margin:auto; re-center modal dialogs */
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  overflow: visible;
+}
+
+#header-dialog {
+  width: min(980px, 96vw);
 }
 
 dialog::backdrop {

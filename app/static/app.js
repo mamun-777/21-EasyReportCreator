@@ -65,7 +65,8 @@ let projectDetails = null;
 
 const CATEGORY_LABELS = {
   standard: "Standard project fields",
-  custom: "Custom properties (S88 and others)",
+  S88: "Custom properties (S88)",
+  custom: "Other custom properties",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -250,9 +251,7 @@ function renderTitleBlock(template) {
   const header = template?.header || {};
   $("tb-title").textContent = header.title || template?.name || "—";
   const parts = [];
-  // Keep the preview title block compact: show at most 4 project fields + doc/rev
-  const fields = (header.fields || []).slice(0, 4);
-  for (const field of fields) {
+  for (const field of header.fields || []) {
     parts.push(
       `<div><dt>${escapeHtml(field.label || field.key)}</dt><dd>${escapeHtml(field.value || "")}</dd></div>`
     );
@@ -262,16 +261,27 @@ function renderTitleBlock(template) {
   $("tb-fields").innerHTML = parts.join("");
 }
 
+const DEFAULT_HEADER_KEYS = [
+  "Project_Name",
+  "Project_Description",
+  "Project_Number",
+  "S88_Projectstatus",
+  "S88_Locatie",
+];
+
+function selectedHeaderKeys() {
+  const fields = currentTemplate?.header?.fields || [];
+  if (fields.length) {
+    return new Set(fields.map((f) => f.key));
+  }
+  return new Set(DEFAULT_HEADER_KEYS);
+}
+
 async function ensureProjectDetails() {
   if (!projectDetails) {
     projectDetails = await api("/api/project/details");
   }
   return projectDetails;
-}
-
-function selectedHeaderKeys() {
-  const keys = new Set((currentTemplate?.header?.fields || []).map((f) => f.key));
-  return keys;
 }
 
 function renderHeaderFieldGroups() {
@@ -288,7 +298,7 @@ function renderHeaderFieldGroups() {
   }
   container.innerHTML = Object.entries(groups)
     .map(([category, items]) => {
-      const title = CATEGORY_LABELS[category] || category;
+      const title = items[0]?.category_label || CATEGORY_LABELS[category] || category;
       const checks = items
         .map(
           (item) => `<label class="field-check">
@@ -360,6 +370,15 @@ function applyHeaderToTemplate() {
   currentTemplate.revision_table = readRevisionEditor();
 }
 
+async function persistCurrentTemplate() {
+  if (!currentTemplate?.id) return;
+  await api("/api/templates", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(currentTemplate),
+  });
+}
+
 async function openProject(path) {
   const result = await api("/api/open-project", {
     method: "POST",
@@ -424,9 +443,14 @@ $("btn-export").addEventListener("click", () => {
 $("btn-save-tpl").addEventListener("click", async () => {
   if (!currentTemplate) return;
   const copy = structuredClone(currentTemplate);
-  copy.id = `${copy.id}_standard`;
-  copy.name = `${copy.name} (company standard)`;
-  copy.name_nl = `${copy.name_nl} (bedrijfsstandaard)`;
+  const baseId = copy.id.replace(/_standard$/, "");
+  copy.id = `${baseId}_standard`;
+  if (!copy.name.includes("(company standard)")) {
+    copy.name = `${copy.name} (company standard)`;
+  }
+  if (!copy.name_nl.includes("(bedrijfsstandaard)")) {
+    copy.name_nl = `${copy.name_nl} (bedrijfsstandaard)`;
+  }
   await api("/api/templates", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -434,7 +458,7 @@ $("btn-save-tpl").addEventListener("click", async () => {
   });
   templates = await api("/api/templates");
   renderTemplates();
-  alert("Template saved. You can select it from the list on the left.");
+  alert("Template saved with header fields and revision table. Select it from the list on the left.");
 });
 
 $("logo-file").addEventListener("change", async (e) => {
@@ -495,6 +519,7 @@ $("header-apply").addEventListener("click", () => {
     )
     .join("");
   $("header-dialog").close();
+  persistCurrentTemplate().catch((err) => alert(err.message));
 });
 
 $("hdr-add-rev").addEventListener("click", () => {

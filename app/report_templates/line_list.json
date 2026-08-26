@@ -4,14 +4,39 @@
   "name_nl": "Leidinglijst",
   "source": "lines",
   "description": "Pipe segments with size, material, from/to and parent line group number.",
-  "sort": ["LineNumber", "Tag"],
+  "sort": [
+    "LineNumber",
+    "Tag"
+  ],
   "include_pnpid": true,
   "header": {
     "company": "Vitens",
     "title": "Leidinglijst / Line List",
     "document_number": "MN-P-RHN-PID-0001-LL",
     "revision": "A",
-    "date": "2026-08-19"
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
   },
   "revision_table": [
     {
@@ -24,19 +49,89 @@
     }
   ],
   "columns": [
-    {"key": "LineNumber", "header": "Leidingnummer", "width": 16, "visible": true},
-    {"key": "Tag", "header": "Segment tag", "width": 16, "visible": true},
-    {"key": "FromTag", "header": "Van", "width": 22, "visible": true},
-    {"key": "ToTag", "header": "Naar", "width": 22, "visible": true},
-    {"key": "Size", "header": "Maat", "width": 10, "visible": true},
-    {"key": "Material", "header": "Leidingmateriaal", "width": 16, "visible": true},
-    {"key": "Service", "header": "Service", "width": 14, "visible": true},
-    {"key": "Medium", "header": "Medium", "width": 12, "visible": true},
-    {"key": "Spec", "header": "Spec", "width": 12, "visible": true},
-    {"key": "Insulation", "header": "Isolatie", "width": 12, "visible": true},
-    {"key": "DesignPressure", "header": "Design P", "width": 12, "visible": true},
-    {"key": "OperatingPressure", "header": "Operating P", "width": 12, "visible": true},
-    {"key": "PnID", "header": "Blad", "width": 10, "visible": true},
-    {"key": "Area", "header": "Procesopstal", "width": 16, "visible": true}
+    {
+      "key": "LineNumber",
+      "header": "Leidingnummer",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Tag",
+      "header": "Segment tag",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "FromTag",
+      "header": "Van",
+      "width": 22,
+      "visible": true
+    },
+    {
+      "key": "ToTag",
+      "header": "Naar",
+      "width": 22,
+      "visible": true
+    },
+    {
+      "key": "Size",
+      "header": "Maat",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Material",
+      "header": "Leidingmateriaal",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Service",
+      "header": "Service",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Medium",
+      "header": "Medium",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Spec",
+      "header": "Spec",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Insulation",
+      "header": "Isolatie",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "DesignPressure",
+      "header": "Design P",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "OperatingPressure",
+      "header": "Operating P",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "PnID",
+      "header": "Blad",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Area",
+      "header": "Procesopstal",
+      "width": 16,
+      "visible": true
+    }
   ]
 }

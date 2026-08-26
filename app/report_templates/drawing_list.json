@@ -4,14 +4,38 @@
   "name_nl": "Tekeningenlijst",
   "source": "drawings",
   "description": "P&ID drawing register from PnPDrawings, including Vitens title-block (Kader) fields.",
-  "sort": ["PnID"],
+  "sort": [
+    "PnID"
+  ],
   "include_pnpid": true,
   "header": {
     "company": "Vitens",
     "title": "Tekeningenlijst / Drawing List",
     "document_number": "MN-P-RHN-PID-0001-TL",
     "revision": "A",
-    "date": "2026-08-19"
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
   },
   "revision_table": [
     {
@@ -24,15 +48,65 @@
     }
   ],
   "columns": [
-    {"key": "PnID", "header": "Blad", "width": 10, "visible": true},
-    {"key": "DwgName", "header": "Bestand", "width": 14, "visible": true},
-    {"key": "Title", "header": "Inhoud 1", "width": 28, "visible": true},
-    {"key": "Subtitle", "header": "Inhoud 2", "width": 36, "visible": true},
-    {"key": "Area", "header": "Procesopstal", "width": 18, "visible": true},
-    {"key": "Revision", "header": "Wijziging", "width": 12, "visible": true},
-    {"key": "Status", "header": "PID status", "width": 14, "visible": true},
-    {"key": "StatusDate", "header": "Statusdatum", "width": 14, "visible": true},
-    {"key": "DrawnBy", "header": "Getekend door", "width": 16, "visible": true},
-    {"key": "DrawnDate", "header": "Datum getekend", "width": 16, "visible": true}
+    {
+      "key": "PnID",
+      "header": "Blad",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "DwgName",
+      "header": "Bestand",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Title",
+      "header": "Inhoud 1",
+      "width": 28,
+      "visible": true
+    },
+    {
+      "key": "Subtitle",
+      "header": "Inhoud 2",
+      "width": 36,
+      "visible": true
+    },
+    {
+      "key": "Area",
+      "header": "Procesopstal",
+      "width": 18,
+      "visible": true
+    },
+    {
+      "key": "Revision",
+      "header": "Wijziging",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Status",
+      "header": "PID status",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "StatusDate",
+      "header": "Statusdatum",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "DrawnBy",
+      "header": "Getekend door",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "DrawnDate",
+      "header": "Datum getekend",
+      "width": 16,
+      "visible": true
+    }
   ]
 }

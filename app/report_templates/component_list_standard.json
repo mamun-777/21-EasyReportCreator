@@ -14,7 +14,29 @@
     "title": "PnID Componentenlijst V6.1",
     "document_number": "MN-P-RHN-PID-0001-CL",
     "revision": "A",
-    "date": "2026-08-19"
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
   },
   "revision_table": [
     {

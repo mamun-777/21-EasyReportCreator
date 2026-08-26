@@ -9,6 +9,7 @@ from .dcf import table_exists
 _REVISION_DATE = re.compile(r"^Projectrevisie_Revisiedatum\s+(.+)$")
 _REVISION_NOTE = re.compile(r"^Projectrevisie_Gewijzigd\s+(.+)$")
 
+# Autodesk Project Details — standard fields (General Settings → Project Details)
 _STANDARD_KEYS = {
     "Project_Name",
     "Project_Description",
@@ -17,6 +18,29 @@ _STANDARD_KEYS = {
     "Version",
     "ToolPaletteGroupName",
     "ToolPaletteGroupNameForPiping",
+}
+
+# Friendly English labels for known Project Details / S88 fields (Rhenen sample)
+_LABELS: dict[str, str] = {
+    "Project_Name": "Project name",
+    "Project_Description": "Project description",
+    "Project_Number": "Project number",
+    "Project_Standard": "Project standard",
+    "Version": "Version",
+    "ToolPaletteGroupName": "Tool palette group",
+    "ToolPaletteGroupNameForPiping": "Piping tool palette group",
+    "S88_Projectcode": "Project code",
+    "S88_Locatiesoort": "Location type",
+    "S88_Locatie": "Location",
+    "S88_Projectstatus": "Project status",
+    "S88_Procesgroep": "Process group",
+    "S88_Locatiecode": "Location code",
+}
+
+_CATEGORY_LABELS: dict[str, str] = {
+    "standard": "Standard project fields",
+    "S88": "Custom properties (S88)",
+    "custom": "Other custom properties",
 }
 
 
@@ -29,6 +53,8 @@ def _clean(value: Any) -> str:
 
 
 def _human_label(key: str) -> str:
+    if key in _LABELS:
+        return _LABELS[key]
     if key.startswith("S88_"):
         return key[4:].replace("_", " ")
     if key.startswith("Project_"):
@@ -37,10 +63,11 @@ def _human_label(key: str) -> str:
 
 
 def _field_category(key: str) -> str:
+    """Return catalogue category id: standard | S88 | custom | revision_meta."""
     if key.startswith("Projectrevisie_"):
         return "revision_meta"
     if key.startswith("S88_"):
-        return "custom"
+        return "S88"
     if key in _STANDARD_KEYS:
         return "standard"
     return "custom"
@@ -56,6 +83,14 @@ def _project_row(con: sqlite3.Connection) -> dict[str, Any]:
 
 
 def header_catalogue(con: sqlite3.Connection) -> list[dict[str, Any]]:
+    """
+    Flat list of Project Details fields from PnPProject for the title-block picker.
+
+    Categories:
+    - standard — Autodesk Project name / description / number / standard / palettes
+    - S88 — user-defined S88 category (Rhenen / Vitens)
+    - custom — any other non-revision user columns
+    """
     row = _project_row(con)
     if not row:
         return []
@@ -71,12 +106,42 @@ def header_catalogue(con: sqlite3.Connection) -> list[dict[str, Any]]:
                 "key": key,
                 "label": _human_label(key),
                 "category": category,
+                "category_label": _CATEGORY_LABELS.get(category, category),
                 "value": row.get(key, ""),
             }
         )
-    order = {"standard": 0, "custom": 1}
+    order = {"standard": 0, "S88": 1, "custom": 2}
     items.sort(key=lambda item: (order.get(item["category"], 9), item["label"].lower()))
     return items
+
+
+def catalogue_groups(catalogue: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Group catalogue items for API consumers (AM/PM Mon 24 deliverable shape)."""
+    buckets: dict[str, list[dict[str, Any]]] = {}
+    for item in catalogue:
+        buckets.setdefault(item["category"], []).append(item)
+    order = ["standard", "S88", "custom"]
+    groups: list[dict[str, Any]] = []
+    for cat in order:
+        fields = buckets.pop(cat, None)
+        if not fields:
+            continue
+        groups.append(
+            {
+                "id": cat,
+                "label": _CATEGORY_LABELS.get(cat, cat),
+                "fields": fields,
+            }
+        )
+    for cat, fields in buckets.items():
+        groups.append(
+            {
+                "id": cat,
+                "label": _CATEGORY_LABELS.get(cat, cat),
+                "fields": fields,
+            }
+        )
+    return groups
 
 
 def revision_rows_from_project(con: sqlite3.Connection) -> list[dict[str, str]]:
@@ -139,10 +204,10 @@ def resolve_header_block(
 
 def _default_header_fields() -> list[dict[str, str]]:
     return [
-        {"key": "Project_Name", "label": "Project"},
-        {"key": "Project_Description", "label": "Description"},
+        {"key": "Project_Name", "label": "Project name"},
+        {"key": "Project_Description", "label": "Project description"},
         {"key": "Project_Number", "label": "Project number"},
-        {"key": "S88_Projectstatus", "label": "Status"},
+        {"key": "S88_Projectstatus", "label": "Project status"},
         {"key": "S88_Locatie", "label": "Location"},
     ]
 

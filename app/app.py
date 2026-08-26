@@ -8,9 +8,23 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
+from plant3d.catalog import (
+    class_ancestors,
+    class_display_name,
+    class_tree,
+    flatten_class_tree,
+    properties_for_class,
+    property_catalogue_for_source,
+    source_class_map,
+)
 from plant3d.dcf import connect, find_project_dir, load_project
 from plant3d.excel import apply_changes_to_copy, export_workbook, read_imported_excel
-from plant3d.project import header_catalogue, merge_template_header, revision_rows_from_project
+from plant3d.project import (
+    catalogue_groups,
+    header_catalogue,
+    merge_template_header,
+    revision_rows_from_project,
+)
 from plant3d.queries import EDITABLE_FIELDS, FIELD_TO_COLUMN, run_source
 from plant3d.templates import apply_template, list_templates, load_template, save_template
 
@@ -98,6 +112,7 @@ def project() -> dict[str, Any]:
 
 @app.get("/api/project/details")
 def project_details() -> dict[str, Any]:
+    """Project Details header catalogue: standard + custom (S88) fields from PnPProject."""
     _, dcf_path = load_project(_project_path())
     with connect(dcf_path) as con:
         catalogue = header_catalogue(con)
@@ -105,9 +120,114 @@ def project_details() -> dict[str, Any]:
         values = {item["key"]: item["value"] for item in catalogue}
     return {
         "catalogue": catalogue,
+        "groups": catalogue_groups(catalogue),
         "values": values,
         "revisions": revisions,
     }
+
+
+@app.get("/api/project/header-catalogue")
+def project_header_catalogue() -> dict[str, Any]:
+    """Alias focused on Mon 24 WP2: flat catalogue + grouped categories."""
+    return project_details()
+
+
+@app.get("/api/project/class-tree")
+def project_class_tree(root: str = "EngineeringItems", flat: bool = False) -> dict[str, Any]:
+    """WP3: Engineering Items (or other) class hierarchy from PnPTables."""
+    _, dcf_path = load_project(_project_path())
+    with connect(dcf_path) as con:
+        try:
+            tree = class_tree(con, root=root)
+        except KeyError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(400, str(exc)) from exc
+    payload: dict[str, Any] = {
+        "root": tree["root"],
+        "node_count": tree["node_count"],
+        "tree": tree,
+        "sources": source_class_map(),
+    }
+    if flat:
+        payload["classes"] = flatten_class_tree(tree)
+    return payload
+
+
+@app.get("/api/project/classes/{class_name}/properties")
+def project_class_properties(
+    class_name: str,
+    include_inherited: bool = True,
+    include_system: bool = False,
+    include_hidden: bool = True,
+) -> dict[str, Any]:
+    """WP3: standard + user properties for one class (inherited via BaseTable)."""
+    _, dcf_path = load_project(_project_path())
+    with connect(dcf_path) as con:
+        try:
+            props = properties_for_class(
+                con,
+                class_name,
+                include_inherited=include_inherited,
+                include_system=include_system,
+                include_hidden=include_hidden,
+            )
+            ancestors = class_ancestors(con, class_name)
+            display = class_display_name(con, class_name)
+        except KeyError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(400, str(exc)) from exc
+    return {
+        "class_name": class_name,
+        "display_name": display,
+        "ancestors": ancestors,
+        "properties": props,
+        "count": len(props),
+    }
+
+
+@app.get("/api/project/property-catalogue")
+def project_property_catalogue(
+    source: str | None = None,
+    class_name: str | None = None,
+    include_inherited: bool = True,
+    include_system: bool = False,
+    include_hidden: bool = True,
+) -> dict[str, Any]:
+    """WP3: property list for a report source or explicit class name."""
+    if not source and not class_name:
+        raise HTTPException(400, "Provide source= (e.g. valves) or class_name= (e.g. HandValves).")
+    _, dcf_path = load_project(_project_path())
+    with connect(dcf_path) as con:
+        try:
+            if source:
+                return property_catalogue_for_source(
+                    con,
+                    source,
+                    include_inherited=include_inherited,
+                    include_system=include_system,
+                    include_hidden=include_hidden,
+                )
+            assert class_name is not None
+            props = properties_for_class(
+                con,
+                class_name,
+                include_inherited=include_inherited,
+                include_system=include_system,
+                include_hidden=include_hidden,
+            )
+            return {
+                "class_name": class_name,
+                "display_name": class_display_name(con, class_name),
+                "ancestors": class_ancestors(con, class_name),
+                "properties": props,
+                "count": len(props),
+            }
+        except KeyError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(400, str(exc)) from exc
 
 
 def _merged_template(template: dict[str, Any]) -> dict[str, Any]:
