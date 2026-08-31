@@ -91,6 +91,8 @@ ehthumbs.db
 
 # --- PHP / web (local preview artefacts) ---
 vendor/
+!app/static/vendor/
+!app/static/vendor/**
 
 # --- Archives (manual drops, backups) ---
 *.zip

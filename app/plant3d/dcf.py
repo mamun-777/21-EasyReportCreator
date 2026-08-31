@@ -32,7 +32,11 @@ def find_project_dir(path: str | Path) -> Path:
         p = p.parent
     if (p / "Project.xml").exists() or (p / "ProcessPower.dcf").exists():
         return p
-    raise FileNotFoundError(f"No Plant 3D project found at {p}")
+    if any(p.glob("*.dcf")):
+        return p
+    raise FileNotFoundError(
+        "No Plant 3D project database found. Select ProcessPower.dcf from your project folder."
+    )
 
 
 def find_dcf(project_dir: Path) -> Path:
@@ -44,6 +48,23 @@ def find_dcf(project_dir: Path) -> Path:
         raise FileNotFoundError(f"No .dcf file in {project_dir}")
     preferred = [m for m in matches if m.name.lower() == "processpower.dcf"]
     return preferred[0] if preferred else matches[0]
+
+
+def validate_dcf(dcf_path: Path) -> None:
+    """Raise ValueError if the file is not a readable Plant 3D SQLite database."""
+    path = Path(dcf_path).resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"DCF file not found: {path}")
+    if path.suffix.lower() != ".dcf":
+        raise ValueError("Please select a Plant 3D database file (.dcf).")
+    try:
+        with connect(path) as con:
+            if not table_exists(con, "EngineeringItems") and not table_exists(con, "PnPProject"):
+                raise ValueError(
+                    "This file does not look like a Plant 3D ProcessPower database."
+                )
+    except sqlite3.DatabaseError as exc:
+        raise ValueError("The selected file is not a valid SQLite database.") from exc
 
 
 def connect(dcf_path: Path) -> sqlite3.Connection:
@@ -83,7 +104,7 @@ def _xml_text(project_dir: Path) -> tuple[str, str]:
     return name, desc
 
 
-def load_project(path: str | Path) -> tuple[ProjectInfo, Path]:
+def load_project(path: str | Path, *, include_drawings: bool = True) -> tuple[ProjectInfo, Path]:
     project_dir = find_project_dir(path)
     dcf_path = find_dcf(project_dir)
     info = ProjectInfo(dcf_path=str(dcf_path), project_dir=str(project_dir))
@@ -120,7 +141,7 @@ def load_project(path: str | Path) -> tuple[ProjectInfo, Path]:
         }
         info.drawing_count = info.counts["drawings"]
 
-        if table_exists(con, "PnPDrawings"):
+        if include_drawings and table_exists(con, "PnPDrawings"):
             rows = con.execute(
                 """
                 SELECT PnID, [Dwg Name] AS DwgName, Title,

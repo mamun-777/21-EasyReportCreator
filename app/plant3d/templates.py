@@ -13,18 +13,31 @@ def _ensure_dir() -> Path:
     return TEMPLATES_DIR
 
 
+def template_exists(template_id: str) -> bool:
+    return (_ensure_dir() / f"{template_id}.json").exists()
+
+
+def standard_template_id(base_id: str) -> str:
+    base = base_id.removesuffix("_standard")
+    return f"{base}_standard"
+
+
 def list_templates() -> list[dict[str, Any]]:
     items = []
     for path in sorted(_ensure_dir().glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
+        template_id = data.get("id", path.stem)
+        if template_id.endswith("_standard"):
+            continue
         items.append(
             {
-                "id": data.get("id", path.stem),
+                "id": template_id,
                 "name": data.get("name", path.stem),
                 "name_nl": data.get("name_nl", data.get("name", path.stem)),
                 "source": data.get("source"),
                 "description": data.get("description", ""),
                 "file": path.name,
+                "has_standard": template_exists(standard_template_id(template_id)),
             }
         )
     return items
@@ -37,16 +50,51 @@ def load_template(template_id: str) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def save_template(data: dict[str, Any]) -> dict[str, Any]:
+def resolve_template_id(template_id: str) -> str:
+    """Prefer saved company standard when loading a base list type."""
+    base = template_id.removesuffix("_standard")
+    preferred = standard_template_id(base)
+    if template_id == base and template_exists(preferred):
+        return preferred
+    return template_id
+
+
+def save_template(data: dict[str, Any], *, overwrite: bool = True) -> dict[str, Any]:
     template_id = data.get("id")
     if not template_id:
         raise ValueError("Template id is required")
     safe = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in template_id)
+    path = _ensure_dir() / f"{safe}.json"
+    if path.exists() and not overwrite:
+        raise FileExistsError(safe)
     data = deepcopy(data)
     data["id"] = safe
-    path = _ensure_dir() / f"{safe}.json"
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     return data
+
+
+def seed_standard_templates() -> list[str]:
+    """Create missing {id}_standard.json files from base list templates."""
+    created: list[str] = []
+    for path in sorted(_ensure_dir().glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        base_id = data.get("id", path.stem)
+        if base_id.endswith("_standard"):
+            continue
+        standard_id = standard_template_id(base_id)
+        if template_exists(standard_id):
+            continue
+        copy = deepcopy(data)
+        copy["id"] = standard_id
+        name = copy.get("name", base_id)
+        name_nl = copy.get("name_nl", name)
+        if "(company standard)" not in name:
+            copy["name"] = f"{name} (company standard)"
+        if "(bedrijfsstandaard)" not in name_nl:
+            copy["name_nl"] = f"{name_nl} (bedrijfsstandaard)"
+        save_template(copy, overwrite=True)
+        created.append(standard_id)
+    return created
 
 
 def apply_template(rows: list[dict[str, Any]], template: dict[str, Any]) -> list[dict[str, Any]]:

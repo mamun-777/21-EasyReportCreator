@@ -1,0 +1,124 @@
+{
+  "id": "control_valve_list_standard",
+  "name": "Control Valve List (company standard)",
+  "name_nl": "Gestuurde afsluiters (bedrijfsstandaard)",
+  "source": "control_valves",
+  "description": "Actuated valves (Gestuurdeafsluiters) with control signal and limit switches.",
+  "sort": [
+    "Tag"
+  ],
+  "include_pnpid": true,
+  "header": {
+    "company": "Vitens",
+    "title": "Gestuurde afsluiters / Control Valve List",
+    "document_number": "MN-P-RHN-PID-0001-CV",
+    "revision": "A",
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
+  },
+  "revision_table": [
+    {
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
+      "checked": "",
+      "approved": ""
+    }
+  ],
+  "columns": [
+    {
+      "key": "Tag",
+      "header": "Tag",
+      "width": 24,
+      "visible": true
+    },
+    {
+      "key": "ObjectType",
+      "header": "Objectsoort",
+      "width": 28,
+      "visible": true
+    },
+    {
+      "key": "Omschrijving",
+      "header": "Omschrijving",
+      "width": 22,
+      "visible": true
+    },
+    {
+      "key": "Size",
+      "header": "Maat",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Actuation",
+      "header": "Bediening",
+      "width": 18,
+      "visible": true
+    },
+    {
+      "key": "ControlSignal",
+      "header": "Stuursignaal",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "LimitSwitches",
+      "header": "Eindcontacten",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Voltage",
+      "header": "Spanning",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "LineNumber",
+      "header": "Leidingnr",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Procesdeel",
+      "header": "Procesdeel",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "PnID",
+      "header": "Blad",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Area",
+      "header": "Procesopstal",
+      "width": 16,
+      "visible": true
+    }
+  ]
+}

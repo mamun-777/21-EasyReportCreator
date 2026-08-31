@@ -1,7 +1,7 @@
 {
   "id": "valve_list_standard",
   "name": "Valve List (company standard)",
-  "name_nl": "Afsluiterlijst (bedrijfsstandaard)",
+  "name_nl": "Afsluiterlijst",
   "source": "valves",
   "description": "Hand valves from HandValves + Vitens engineering properties, with line number from the connected pipe.",
   "sort": [
@@ -12,18 +12,18 @@
     "company": "Vitens",
     "title": "Afsluiterlijst / Valve List",
     "document_number": "MN-P-RHN-PID-0001-AL",
-    "revision": "A",
-    "date": "2026-08-19",
+    "revision": "B",
+    "date": "2026-08-11",
     "fields": [
-      {
-        "key": "Project_Name",
-        "label": "Project name",
-        "value": "MN-P-RHN-PID-0001"
-      },
       {
         "key": "Project_Description",
         "label": "Project description",
         "value": "Productiebedrijf Rhenen"
+      },
+      {
+        "key": "Project_Name",
+        "label": "Project name",
+        "value": "MN-P-RHN-PID-0001"
       },
       {
         "key": "Project_Number",
@@ -31,25 +31,38 @@
         "value": "MN-P-RHN-PID-0001"
       },
       {
-        "key": "S88_Projectstatus",
-        "label": "Project status",
-        "value": "As Built"
-      },
-      {
         "key": "S88_Locatie",
         "label": "Location",
         "value": "Rhenen"
+      },
+      {
+        "key": "S88_Locatiecode",
+        "label": "Location code",
+        "value": "RHN"
+      },
+      {
+        "key": "S88_Locatiesoort",
+        "label": "Location type",
+        "value": "Productiebedrijf"
+      },
+      {
+        "key": "S88_Procesgroep",
+        "label": "Process group",
+        "value": "P&ID"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status",
+        "value": "As Built"
       }
     ]
   },
   "revision_table": [
     {
-      "rev": "A",
-      "date": "2026-08-19",
-      "desc": "Demo issue from ProcessPower.dcf",
-      "drawn": "EasyReportCreator",
-      "checked": "",
-      "approved": ""
+      "rev": "B",
+      "date": "2026-08-31",
+      "desc": "Round-trip test",
+      "drawn": "ERC"
     }
   ],
   "columns": [
@@ -75,19 +88,19 @@
       "key": "Size",
       "header": "Maat",
       "width": 10,
-      "visible": true
+      "visible": false
     },
     {
       "key": "NONC",
       "header": "NO/NC",
       "width": 10,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Actuation",
       "header": "Bediening",
       "width": 18,
-      "visible": true
+      "visible": false
     },
     {
       "key": "LineNumber",
@@ -99,49 +112,49 @@
       "key": "Service",
       "header": "Service",
       "width": 14,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Medium",
       "header": "Medium",
       "width": 12,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Material",
       "header": "Materiaal",
       "width": 12,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Procesdeel",
       "header": "Procesdeel",
       "width": 12,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Procesmodule",
       "header": "Procesmodule",
       "width": 14,
-      "visible": true
+      "visible": false
     },
     {
       "key": "PnID",
       "header": "Blad",
       "width": 10,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Area",
       "header": "Procesopstal",
       "width": 16,
-      "visible": true
+      "visible": false
     },
     {
       "key": "Remarks",
       "header": "Opmerking",
       "width": 20,
-      "visible": true
+      "visible": false
     }
   ]
 }

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
+import shutil
+import uuid
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
@@ -17,7 +20,7 @@ from plant3d.catalog import (
     property_catalogue_for_source,
     source_class_map,
 )
-from plant3d.dcf import connect, find_project_dir, load_project
+from plant3d.dcf import connect, find_project_dir, load_project, validate_dcf
 from plant3d.excel import apply_changes_to_copy, export_workbook, read_imported_excel
 from plant3d.project import (
     catalogue_groups,
@@ -26,12 +29,21 @@ from plant3d.project import (
     revision_rows_from_project,
 )
 from plant3d.queries import EDITABLE_FIELDS, FIELD_TO_COLUMN, run_source
-from plant3d.templates import apply_template, list_templates, load_template, save_template
+from plant3d.templates import (
+    apply_template,
+    list_templates,
+    load_template,
+    resolve_template_id,
+    save_template,
+    seed_standard_templates,
+    template_exists,
+)
 
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parent
 STATIC = ROOT / "static"
 DATA = ROOT / "data"
+UPLOADS_ROOT = DATA / "uploads"
 SAMPLE_PROJECT = REPO_ROOT / "samples" / "MN-P-RHN-PID-0001"
 STATE_FILE = DATA / "state.json"
 
@@ -62,10 +74,51 @@ def _resolve_project_path(raw: str | Path) -> Path:
 
 
 def _project_path() -> Path:
-    path = _resolve_project_path(_state().get("project_path") or SAMPLE_PROJECT)
+    state = _state()
+    path = _resolve_project_path(state.get("project_path") or SAMPLE_PROJECT)
     if not path.exists():
-        raise HTTPException(400, "Plant 3D project folder not found. Open the sample project first.")
+        raise HTTPException(400, "Plant 3D project folder not found. Open a .dcf file first.")
+    if state.get("source") == "upload" and not any(path.glob("*.dcf")):
+        raise HTTPException(400, "Uploaded project not found. Please upload the .dcf file again.")
     return path
+
+
+def _sanitize_filename(name: str) -> str:
+    stem = Path(name).stem
+    safe = re.sub(r"[^\w.\-]+", "_", stem).strip("._")
+    return safe or "ProcessPower"
+
+
+def _new_upload_session_dir() -> Path:
+    session_dir = UPLOADS_ROOT / uuid.uuid4().hex
+    session_dir.mkdir(parents=True, exist_ok=True)
+    return session_dir
+
+
+def _prune_upload_sessions(keep: Path) -> None:
+    """Remove older upload folders; ignore Windows file locks on in-use databases."""
+    if not UPLOADS_ROOT.exists():
+        return
+    keep_resolved = keep.resolve()
+    for child in UPLOADS_ROOT.iterdir():
+        if not child.is_dir() or child.resolve() == keep_resolved:
+            continue
+        shutil.rmtree(child, ignore_errors=True)
+
+
+def _project_payload(
+    info: Any,
+    *,
+    source: str = "folder",
+    uploaded_filename: str = "",
+    include_drawings: bool = False,
+) -> dict[str, Any]:
+    payload = dict(info.__dict__)
+    if not include_drawings:
+        payload.pop("drawings", None)
+    payload["source"] = source
+    payload["uploaded_filename"] = uploaded_filename
+    return payload
 
 
 def _logo_path() -> Path | None:
@@ -98,10 +151,55 @@ def open_project(payload: dict[str, str]) -> dict[str, Any]:
         info, _ = load_project(path)
     except FileNotFoundError as exc:
         raise HTTPException(400, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     state = _state()
     state["project_path"] = str(find_project_dir(path))
+    state["source"] = "folder"
+    state.pop("uploaded_filename", None)
     _save_state(state)
-    return {"ok": True, "project": info.__dict__}
+    return {"ok": True, "project": _project_payload(info, source="folder")}
+
+
+@app.post("/api/upload-project")
+async def upload_project(file: UploadFile = File(...)) -> dict[str, Any]:
+    """Upload a local ProcessPower.dcf for analysis (streamed; suitable for large files)."""
+    original_name = file.filename or "ProcessPower.dcf"
+    if not original_name.lower().endswith(".dcf"):
+        raise HTTPException(400, "Please select a Plant 3D database file (.dcf).")
+
+    session_dir = _new_upload_session_dir()
+    # Store under a stable name so later API calls can resolve the upload folder.
+    target = session_dir / "ProcessPower.dcf"
+    try:
+        with target.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except OSError as exc:
+        shutil.rmtree(session_dir, ignore_errors=True)
+        raise HTTPException(500, f"Could not save uploaded file: {exc}") from exc
+
+    try:
+        validate_dcf(target)
+        info, _ = load_project(target, include_drawings=False)
+    except (FileNotFoundError, ValueError) as exc:
+        shutil.rmtree(session_dir, ignore_errors=True)
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        shutil.rmtree(session_dir, ignore_errors=True)
+        raise HTTPException(400, f"Could not read Plant 3D database: {exc}") from exc
+
+    state = _state()
+    state["project_path"] = str(session_dir)
+    state["source"] = "upload"
+    state["uploaded_filename"] = original_name
+    _save_state(state)
+    _prune_upload_sessions(session_dir)
+    return {
+        "ok": True,
+        "project": _project_payload(info, source="upload", uploaded_filename=original_name),
+        "filename": original_name,
+        "bytes": target.stat().st_size,
+    }
 
 
 @app.get("/api/project")
@@ -240,33 +338,62 @@ def _merged_template(template: dict[str, Any]) -> dict[str, Any]:
     return merge_template_header(template, details)
 
 
+@app.on_event("startup")
+def _seed_templates_on_startup() -> None:
+    seed_standard_templates()
+
+
 @app.get("/api/templates")
 def templates() -> list[dict[str, Any]]:
     return list_templates()
 
 
 @app.get("/api/templates/{template_id}")
-def get_template(template_id: str) -> dict[str, Any]:
+def get_template(template_id: str, variant: str = Query("auto")) -> dict[str, Any]:
     try:
-        return load_template(template_id)
+        if variant == "base":
+            resolved = template_id.removesuffix("_standard")
+        elif variant == "exact":
+            resolved = template_id
+        else:
+            resolved = resolve_template_id(template_id)
+        return load_template(resolved)
     except FileNotFoundError as exc:
         raise HTTPException(404, f"Template {template_id} not found") from exc
 
 
 @app.post("/api/templates")
 def post_template(payload: dict[str, Any]) -> dict[str, Any]:
-    return save_template(payload)
+    template = payload.get("template") if isinstance(payload.get("template"), dict) else payload
+    overwrite = bool(payload.get("overwrite", True))
+    template_id = template.get("id")
+    if not template_id:
+        raise HTTPException(400, "Template id is required")
+    if template_exists(template_id) and not overwrite:
+        raise HTTPException(
+            409,
+            f"Template '{template_id}' already exists. Choose overwrite to replace it.",
+        )
+    existed = template_exists(template_id)
+    try:
+        saved = save_template(template, overwrite=overwrite)
+    except FileExistsError as exc:
+        raise HTTPException(409, f"Template '{exc.args[0]}' already exists.") from exc
+    return {"ok": True, "template": saved, "overwritten": existed, "id": saved["id"]}
 
 
 @app.get("/api/report/{template_id}")
 def report(template_id: str) -> dict[str, Any]:
-    template = _merged_template(load_template(template_id))
+    resolved = resolve_template_id(template_id)
+    template = _merged_template(load_template(resolved))
     info, dcf_path = load_project(_project_path())
     with connect(dcf_path) as con:
         raw = run_source(con, template["source"])
     rows = apply_template(raw, template)
     return {
         "template": template,
+        "template_id": template_id,
+        "resolved_id": resolved,
         "project": info.__dict__,
         "row_count": len(rows),
         "raw_count": len(raw),
@@ -276,7 +403,8 @@ def report(template_id: str) -> dict[str, Any]:
 
 @app.get("/api/export/{template_id}")
 def export_report(template_id: str) -> Response:
-    template = _merged_template(load_template(template_id))
+    resolved = resolve_template_id(template_id)
+    template = _merged_template(load_template(resolved))
     info, dcf_path = load_project(_project_path())
     with connect(dcf_path) as con:
         raw = run_source(con, template["source"])

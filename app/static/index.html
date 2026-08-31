@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/styles.css?v=20260825b" />
+  <link rel="stylesheet" href="/static/vendor/flatpickr/flatpickr.min.css" />
+  <link rel="stylesheet" href="/static/styles.css?v=20260831j" />
 </head>
 <body class="app">
   <header class="app-header">
@@ -30,8 +31,26 @@
           <p class="muted" id="project-empty">No project open</p>
         </div>
         <div class="open-row">
-          <input id="project-path" type="text" spellcheck="false" placeholder="Path to Plant 3D folder…" />
+          <input id="project-file-label" type="text" readonly spellcheck="false" placeholder="Select ProcessPower.dcf…" />
           <button id="btn-open" class="btn primary" type="button">Open</button>
+          <input id="project-file" type="file" accept=".dcf" hidden />
+        </div>
+        <div id="upload-status" class="upload-status hidden" aria-live="polite" aria-busy="false">
+          <div class="upload-status-head">
+            <span id="upload-status-label">Uploading…</span>
+            <span id="upload-status-meta" class="muted"></span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-fill" id="upload-progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="notice" class="notice hidden" role="status" aria-live="polite">
+          <div class="notice-body">
+            <strong id="notice-title"></strong>
+            <p id="notice-message"></p>
+          </div>
+          <button id="notice-close" type="button" class="notice-close" aria-label="Dismiss">×</button>
         </div>
 
         <div class="nav-label" id="lbl-lists">Lists</div>
@@ -43,24 +62,27 @@
 
     <main class="app-main">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">Report preview</p>
-          <h1 id="report-title">Select a list</h1>
-          <p class="subtitle" id="report-sub">Open a Plant 3D project folder, then choose a list.</p>
+        <div class="topbar-head">
+          <div class="topbar-intro">
+            <p class="eyebrow">Report preview</p>
+            <h1 id="report-title">Select a list</h1>
+          </div>
+          <div class="actions">
+            <button id="btn-header" class="btn ghost" type="button">Header setup</button>
+            <button id="btn-columns" class="btn ghost" type="button">Columns</button>
+            <label class="file-btn btn ghost">
+              <input id="logo-file" type="file" accept=".png,.jpg,.jpeg" hidden />
+              <span id="btn-logo">Upload logo</span>
+            </label>
+            <button id="btn-save-tpl" class="btn ghost" type="button">Save template</button>
+            <label class="file-btn btn ghost">
+              <input id="import-file" type="file" accept=".xlsx,.xlsm" hidden />
+              <span id="btn-import">Import Excel</span>
+            </label>
+            <button id="btn-export" class="btn primary" type="button">Export Excel</button>
+          </div>
         </div>
-        <div class="actions">
-          <button id="btn-header" class="btn ghost" type="button">Header setup</button>
-          <label class="file-btn btn ghost">
-            <input id="logo-file" type="file" accept=".png,.jpg,.jpeg" hidden />
-            <span id="btn-logo">Upload logo</span>
-          </label>
-          <button id="btn-save-tpl" class="btn ghost" type="button">Save template</button>
-          <label class="file-btn btn ghost">
-            <input id="import-file" type="file" accept=".xlsx,.xlsm" hidden />
-            <span id="btn-import">Import Excel</span>
-          </label>
-          <button id="btn-export" class="btn primary" type="button">Export Excel</button>
-        </div>
+        <p class="subtitle" id="report-sub">Open a ProcessPower.dcf file, then choose a list.</p>
       </header>
 
       <section class="stats" id="stats"></section>
@@ -120,7 +142,7 @@
             <label class="field-row"><span>Title</span><input id="hdr-title" type="text" /></label>
             <label class="field-row"><span>Document no.</span><input id="hdr-doc" type="text" /></label>
             <label class="field-row"><span>Revision</span><input id="hdr-rev" type="text" /></label>
-            <label class="field-row"><span>Date</span><input id="hdr-date" type="date" /></label>
+            <label class="field-row"><span>Date</span><input id="hdr-date" type="text" class="date-input" placeholder="Select date" autocomplete="off" /></label>
             <label class="field-row"><span>Company</span><input id="hdr-company" type="text" /></label>
             <h4>Revision table</h4>
             <div class="rev-editor-wrap">
@@ -166,6 +188,70 @@
     </form>
   </dialog>
 
-  <script src="/static/app.js?v=20260825"></script>
+  <dialog id="columns-dialog">
+    <form method="dialog" class="dialog panel">
+      <div class="panel-bar">
+        <span class="key" id="columns-title">Columns</span>
+        <span class="file">Show / hide</span>
+      </div>
+      <div class="dialog-body">
+        <p class="muted" id="columns-help">Choose which columns appear in the preview and Excel export for this list.</p>
+        <div id="column-checks" class="field-groups column-checks"></div>
+        <menu>
+          <button value="cancel" id="columns-cancel" class="btn ghost">Cancel</button>
+          <button id="columns-apply" class="btn primary" value="default" type="button">Apply to list</button>
+        </menu>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="save-dialog">
+    <form method="dialog" class="dialog panel">
+      <div class="panel-bar">
+        <span class="key" id="save-title">Save template</span>
+        <span class="file">Company standard</span>
+      </div>
+      <div class="dialog-body">
+        <p class="muted" id="save-summary"></p>
+        <div class="save-options">
+          <label class="field-check">
+            <input type="radio" name="save-mode" value="standard" checked />
+            <span>Save as company standard <small id="save-standard-id"></small></span>
+          </label>
+          <label class="field-check">
+            <input type="radio" name="save-mode" value="overwrite" />
+            <span>Overwrite existing company standard</span>
+          </label>
+          <label class="field-check">
+            <input type="radio" name="save-mode" value="reset" />
+            <span>Reset list to factory default</span>
+          </label>
+        </div>
+        <menu>
+          <button value="cancel" id="save-cancel" class="btn ghost">Cancel</button>
+          <button id="save-confirm" class="btn primary" value="default" type="button">Save</button>
+        </menu>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="error-dialog">
+    <form method="dialog" class="dialog panel notice-dialog">
+      <div class="panel-bar">
+        <span class="key" id="error-title">Could not open file</span>
+        <span class="file">Plant 3D database</span>
+      </div>
+      <div class="dialog-body">
+        <p id="error-message" class="notice-dialog-message"></p>
+        <p id="error-hint" class="muted notice-dialog-hint"></p>
+        <menu>
+          <button value="default" class="btn primary" type="submit">OK</button>
+        </menu>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/static/vendor/flatpickr/flatpickr.min.js"></script>
+  <script src="/static/app.js?v=20260831j"></script>
 </body>
 </html>
