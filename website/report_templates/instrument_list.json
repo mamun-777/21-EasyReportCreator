@@ -1,18 +1,18 @@
 {
-  "id": "valve_list_standard",
-  "name": "Valve List (company standard)",
-  "name_nl": "Afsluiterlijst",
-  "source": "valves",
-  "description": "Hand valves from HandValves + Vitens engineering properties, with line number from the connected pipe.",
+  "id": "instrument_list",
+  "name": "Instrument List",
+  "name_nl": "Instrumentenlijst",
+  "source": "instruments",
+  "description": "Instrumentation index with signal, range and process location.",
   "sort": [
     "Tag"
   ],
   "include_pnpid": true,
   "header": {
     "company": "Vitens",
-    "title": "Afsluiterlijst / Valve List",
-    "document_number": "MN-P-RHN-PID-0001-AL",
-    "revision": "B",
+    "title": "Instrumentenlijst / Instrument List",
+    "document_number": "MN-P-RHN-PID-0001-IL",
+    "revision": "A",
     "date": "2026-08-19",
     "fields": [
       {
@@ -39,10 +39,10 @@
   },
   "revision_table": [
     {
-      "rev": "B",
-      "date": "2026-08-31",
-      "desc": "Round-trip test",
-      "drawn": "ERC",
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
       "checked": "",
       "approved": ""
     }
@@ -57,7 +57,7 @@
     {
       "key": "ObjectType",
       "header": "Objectsoort",
-      "width": 22,
+      "width": 24,
       "visible": true
     },
     {
@@ -67,22 +67,40 @@
       "visible": true
     },
     {
+      "key": "Signal",
+      "header": "Meetsignaal",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Range",
+      "header": "Meetbereik",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "AlarmHigh",
+      "header": "Alarm hoog",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "AlarmLow",
+      "header": "Alarm laag",
+      "width": 12,
+      "visible": true
+    },
+    {
       "key": "Size",
       "header": "Maat",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
-      "key": "NONC",
-      "header": "NO/NC",
-      "width": 10,
-      "visible": false
-    },
-    {
-      "key": "Actuation",
-      "header": "Bediening",
-      "width": 18,
-      "visible": false
+      "key": "Medium",
+      "header": "Medium",
+      "width": 12,
+      "visible": true
     },
     {
       "key": "LineNumber",
@@ -91,52 +109,22 @@
       "visible": true
     },
     {
-      "key": "Service",
-      "header": "Service",
-      "width": 14,
-      "visible": false
-    },
-    {
-      "key": "Medium",
-      "header": "Medium",
-      "width": 12,
-      "visible": false
-    },
-    {
-      "key": "Material",
-      "header": "Materiaal",
-      "width": 12,
-      "visible": false
-    },
-    {
       "key": "Procesdeel",
       "header": "Procesdeel",
       "width": 12,
-      "visible": false
-    },
-    {
-      "key": "Procesmodule",
-      "header": "Procesmodule",
-      "width": 14,
-      "visible": false
+      "visible": true
     },
     {
       "key": "PnID",
       "header": "Blad",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Area",
       "header": "Procesopstal",
       "width": 16,
-      "visible": false
-    },
-    {
-      "key": "Remarks",
-      "header": "Opmerking",
-      "width": 20,
-      "visible": false
+      "visible": true
     }
   ]
 }

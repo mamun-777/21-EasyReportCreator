@@ -1,8 +1,9 @@
 # EasyReportCreator — Upwork time log
 
-**Start:** Wed 19 Aug 2026 · **Finish:** Tue 8 Sep 2026  
-**Calendar:** 15 working days × **8 h** = 120 h (3 weeks × 5 days)  
-**Deliverable budget:** 100 h (fixed-price scope)
+**Start:** Wed 19 Aug 2026 · **Finish:** Wed 9 Sep 2026  
+**Calendar:** 16 working days × **8 h** = 128 h (3 weeks × 5 days + **1 day**)  
+**Deliverable budget:** 100 h (fixed-price scope)  
+**Deployment:** **Web app on STRATO** — user uploads `ProcessPower.dcf` (locked with client Tue 1 Sep)
 
 Log **4 h AM + 4 h PM** each working day. Each line **≤ 120 characters**.
 
@@ -90,11 +91,11 @@ Full schedule: `Delivery-Schedule.md`
 
 **AM (4 h):** Excel title block from selected Project Details. Logo in workbook.
 
-**PM (4 h):** Revision table in Excel. English issued layout + column header export.
+**PM (4 h):** Revision table in Excel. English issued layout. Client locks STRATO web + upload.
 
 ---
 
-## Week 3 · Wed 2 – Tue 8 Sep
+## Week 3 · Wed 2 – Wed 9 Sep
 
 ### Wed 2 Sep · 8 h · WP6 · check-in
 
@@ -124,12 +125,20 @@ Full schedule: `Delivery-Schedule.md`
 
 **AM (4 h):** Match public site typography/cards. Dashboard + project card polish.
 
-**PM (4 h):** Flow polish: open → list → columns → preview → export. STRATO upload + HTTPS.
+**PM (4 h):** Flow polish: upload DCF → list → columns → preview → export.
 
 ---
 
-### Tue 8 Sep · 8 h · WP8–WP10 · handover
+### Tue 8 Sep · 8 h · WP8
 
-**AM (4 h):** Local run script + deploy notes. Short user guide draft.
+**AM (4 h):** STRATO deploy: hosted web app, DCF upload limits, session cleanup.
 
-**PM (4 h):** Acceptance on MN-P-RHN-PID-0001. Package for Jan feedback round. Handover.
+**PM (4 h):** HTTPS smoke-test on easyreportcreator.com. Upload + list round-trip on STRATO.
+
+---
+
+### Wed 9 Sep · 8 h · WP8–WP10 · handover
+
+**AM (4 h):** Deploy notes + short user guide (upload workflow).
+
+**PM (4 h):** Acceptance on MN-P-RHN-PID-0001 via web upload. Package for Jan feedback. Handover.

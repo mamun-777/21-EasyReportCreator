@@ -20,7 +20,7 @@ require __DIR__ . '/inc/header.php';
       <div class="feature"><div class="body">
         <span class="key">OPEN</span>
         <h3>Plant 3D project folder</h3>
-        <p>Point the app at the project directory. It reads Project.xml and ProcessPower.dcf. AutoCAD does not need to be running for listing.</p>
+        <p>Upload ProcessPower.dcf in the browser. It reads Project Details and engineering tables. AutoCAD does not need to be running for listing.</p>
       </div></div>
       <div class="feature"><div class="body">
         <span class="key">HEADER</span>
@@ -88,7 +88,7 @@ require __DIR__ . '/inc/header.php';
       <div class="spec-row"><span class="k">OS</span><span class="v">Windows 10 / 11 — the machine that can see the Plant 3D project folder</span></div>
       <div class="spec-row"><span class="k">Project</span><span class="v">AutoCAD Plant 3D project with ProcessPower.dcf (SQLite). Sample: MN-P-RHN-PID-0001</span></div>
       <div class="spec-row"><span class="k">AutoCAD licence</span><span class="v">Not required for listing and Excel export</span></div>
-      <div class="spec-row"><span class="k">Public site</span><span class="v">easyreportcreator.com on STRATO — product pages only; the DCF is not uploaded</span></div>
+      <div class="spec-row"><span class="k">Public site</span><span class="v">easyreportcreator.com on STRATO — product pages + report app; upload ProcessPower.dcf</span></div>
       <div class="spec-row"><span class="k">Language</span><span class="v">English issued lists (Version 1)</span></div>
     </div>
   </div>

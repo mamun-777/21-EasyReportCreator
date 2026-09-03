@@ -1,0 +1,161 @@
+{
+  "id": "component_list",
+  "name": "Component List",
+  "name_nl": "Componentenlijst",
+  "source": "components",
+  "description": "Replacement for Vitens AutoCAD PnID Componentenlijst V6.1 — all tagged engineering items except pipe lines.",
+  "sort": [
+    "PnID",
+    "Tag"
+  ],
+  "include_pnpid": true,
+  "header": {
+    "company": "Vitens",
+    "title": "PnID Componentenlijst V6.1",
+    "document_number": "MN-P-RHN-PID-0001-CL",
+    "revision": "A",
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
+  },
+  "revision_table": [
+    {
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf — successor to Report Creator rcfx",
+      "drawn": "EasyReportCreator",
+      "checked": "",
+      "approved": ""
+    }
+  ],
+  "columns": [
+    {
+      "key": "Tag",
+      "header": "Tag",
+      "width": 24,
+      "visible": true
+    },
+    {
+      "key": "OldTag",
+      "header": "Oude tag",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "ObjectType",
+      "header": "Objectsoort",
+      "width": 22,
+      "visible": true
+    },
+    {
+      "key": "Omschrijving",
+      "header": "Omschrijving",
+      "width": 22,
+      "visible": true
+    },
+    {
+      "key": "Size",
+      "header": "Proces aansluiting",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Material",
+      "header": "Materiaal",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Medium",
+      "header": "Medium",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Actuation",
+      "header": "Bediening",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Voltage",
+      "header": "Spanning",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Electrical_kW",
+      "header": "kW",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Procesdeel",
+      "header": "Procesdeel",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Procesmodule",
+      "header": "Procesmodule",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Procesasset",
+      "header": "Procesasset",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "Fabrikant",
+      "header": "Fabrikant",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Type",
+      "header": "Type",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "PnID",
+      "header": "Blad",
+      "width": 10,
+      "visible": true
+    },
+    {
+      "key": "Area",
+      "header": "Procesopstal",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Remarks",
+      "header": "Opmerking",
+      "width": 18,
+      "visible": true
+    }
+  ]
+}

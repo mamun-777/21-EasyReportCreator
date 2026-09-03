@@ -1,6 +1,6 @@
 {
-  "id": "valve_list_standard",
-  "name": "Valve List (company standard)",
+  "id": "valve_list",
+  "name": "Valve List",
   "name_nl": "Afsluiterlijst",
   "source": "valves",
   "description": "Hand valves from HandValves + Vitens engineering properties, with line number from the connected pipe.",
@@ -12,7 +12,7 @@
     "company": "Vitens",
     "title": "Afsluiterlijst / Valve List",
     "document_number": "MN-P-RHN-PID-0001-AL",
-    "revision": "B",
+    "revision": "A",
     "date": "2026-08-19",
     "fields": [
       {
@@ -39,10 +39,10 @@
   },
   "revision_table": [
     {
-      "rev": "B",
-      "date": "2026-08-31",
-      "desc": "Round-trip test",
-      "drawn": "ERC",
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
       "checked": "",
       "approved": ""
     }
@@ -70,19 +70,19 @@
       "key": "Size",
       "header": "Maat",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "NONC",
       "header": "NO/NC",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Actuation",
       "header": "Bediening",
       "width": 18,
-      "visible": false
+      "visible": true
     },
     {
       "key": "LineNumber",
@@ -94,49 +94,49 @@
       "key": "Service",
       "header": "Service",
       "width": 14,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Medium",
       "header": "Medium",
       "width": 12,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Material",
       "header": "Materiaal",
       "width": 12,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Procesdeel",
       "header": "Procesdeel",
       "width": 12,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Procesmodule",
       "header": "Procesmodule",
       "width": 14,
-      "visible": false
+      "visible": true
     },
     {
       "key": "PnID",
       "header": "Blad",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Area",
       "header": "Procesopstal",
       "width": 16,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Remarks",
       "header": "Opmerking",
       "width": 20,
-      "visible": false
+      "visible": true
     }
   ]
 }

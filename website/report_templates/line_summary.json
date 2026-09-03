@@ -1,0 +1,94 @@
+{
+  "id": "line_summary",
+  "name": "Line Summary",
+  "name_nl": "Leidingoverzicht",
+  "source": "line_summary",
+  "description": "One row per PipeLineGroup with segment count and drawing references.",
+  "sort": [
+    "LineNumber"
+  ],
+  "include_pnpid": true,
+  "header": {
+    "company": "Vitens",
+    "title": "Leidingoverzicht / Line Summary",
+    "document_number": "MN-P-RHN-PID-0001-LS",
+    "revision": "A",
+    "date": "2026-08-19",
+    "fields": [
+      {
+        "key": "Project_Name",
+        "label": "Project name"
+      },
+      {
+        "key": "Project_Description",
+        "label": "Project description"
+      },
+      {
+        "key": "Project_Number",
+        "label": "Project number"
+      },
+      {
+        "key": "S88_Projectstatus",
+        "label": "Project status"
+      },
+      {
+        "key": "S88_Locatie",
+        "label": "Location"
+      }
+    ]
+  },
+  "revision_table": [
+    {
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
+      "checked": "",
+      "approved": ""
+    }
+  ],
+  "columns": [
+    {
+      "key": "LineNumber",
+      "header": "Leidingnummer",
+      "width": 18,
+      "visible": true
+    },
+    {
+      "key": "Service",
+      "header": "Service",
+      "width": 16,
+      "visible": true
+    },
+    {
+      "key": "Size",
+      "header": "Nominale maat",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Spec",
+      "header": "Nominale spec",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Status",
+      "header": "Status",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "SegmentCount",
+      "header": "Segmenten",
+      "width": 12,
+      "visible": true
+    },
+    {
+      "key": "PnID",
+      "header": "Bladen",
+      "width": 20,
+      "visible": true
+    }
+  ]
+}

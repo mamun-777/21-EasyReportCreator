@@ -29,8 +29,9 @@ $description = $description ?? 'Friendlier Plant 3D lists in Excel — without A
       <a href="product.php" class="<?= is_active('product', $page) ? 'active' : '' ?>">Product</a>
       <a href="pricing.php" class="<?= is_active('pricing', $page) ? 'active' : '' ?>">Pricing</a>
       <a href="download.php" class="<?= is_active('download', $page) ? 'active' : '' ?>">Download</a>
+      <a href="report/" class="<?= is_active('report', $page) ? 'active' : '' ?>">Report app</a>
       <a href="contact.php" class="<?= is_active('contact', $page) ? 'active' : '' ?>">Contact</a>
     </nav>
-    <a href="download.php" class="btn">Open the app</a>
+    <a href="report/" class="btn">Open the app</a>
   </div>
 </header>

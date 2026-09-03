@@ -1,18 +1,18 @@
 {
-  "id": "valve_list_standard",
-  "name": "Valve List (company standard)",
-  "name_nl": "Afsluiterlijst",
-  "source": "valves",
-  "description": "Hand valves from HandValves + Vitens engineering properties, with line number from the connected pipe.",
+  "id": "control_valve_list",
+  "name": "Control Valve List",
+  "name_nl": "Gestuurde afsluiters",
+  "source": "control_valves",
+  "description": "Actuated valves (Gestuurdeafsluiters) with control signal and limit switches.",
   "sort": [
     "Tag"
   ],
   "include_pnpid": true,
   "header": {
     "company": "Vitens",
-    "title": "Afsluiterlijst / Valve List",
-    "document_number": "MN-P-RHN-PID-0001-AL",
-    "revision": "B",
+    "title": "Gestuurde afsluiters / Control Valve List",
+    "document_number": "MN-P-RHN-PID-0001-CV",
+    "revision": "A",
     "date": "2026-08-19",
     "fields": [
       {
@@ -39,10 +39,10 @@
   },
   "revision_table": [
     {
-      "rev": "B",
-      "date": "2026-08-31",
-      "desc": "Round-trip test",
-      "drawn": "ERC",
+      "rev": "A",
+      "date": "2026-08-19",
+      "desc": "Demo issue from ProcessPower.dcf",
+      "drawn": "EasyReportCreator",
       "checked": "",
       "approved": ""
     }
@@ -57,7 +57,7 @@
     {
       "key": "ObjectType",
       "header": "Objectsoort",
-      "width": 22,
+      "width": 28,
       "visible": true
     },
     {
@@ -70,19 +70,31 @@
       "key": "Size",
       "header": "Maat",
       "width": 10,
-      "visible": false
-    },
-    {
-      "key": "NONC",
-      "header": "NO/NC",
-      "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Actuation",
       "header": "Bediening",
       "width": 18,
-      "visible": false
+      "visible": true
+    },
+    {
+      "key": "ControlSignal",
+      "header": "Stuursignaal",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "LimitSwitches",
+      "header": "Eindcontacten",
+      "width": 14,
+      "visible": true
+    },
+    {
+      "key": "Voltage",
+      "header": "Spanning",
+      "width": 12,
+      "visible": true
     },
     {
       "key": "LineNumber",
@@ -91,52 +103,22 @@
       "visible": true
     },
     {
-      "key": "Service",
-      "header": "Service",
-      "width": 14,
-      "visible": false
-    },
-    {
-      "key": "Medium",
-      "header": "Medium",
-      "width": 12,
-      "visible": false
-    },
-    {
-      "key": "Material",
-      "header": "Materiaal",
-      "width": 12,
-      "visible": false
-    },
-    {
       "key": "Procesdeel",
       "header": "Procesdeel",
       "width": 12,
-      "visible": false
-    },
-    {
-      "key": "Procesmodule",
-      "header": "Procesmodule",
-      "width": 14,
-      "visible": false
+      "visible": true
     },
     {
       "key": "PnID",
       "header": "Blad",
       "width": 10,
-      "visible": false
+      "visible": true
     },
     {
       "key": "Area",
       "header": "Procesopstal",
       "width": 16,
-      "visible": false
-    },
-    {
-      "key": "Remarks",
-      "header": "Opmerking",
-      "width": 20,
-      "visible": false
+      "visible": true
     }
   ]
 }

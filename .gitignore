@@ -2,6 +2,9 @@
 # EasyReportCreator — keep the repo source-only; large/local assets stay local
 # =============================================================================
 
+# --- Local toolchains (portable PHP, etc.) — never commit ---
+.tools/
+
 # --- Plant 3D project folders (copy locally; ~60 MB+ per project) ---
 samples/*
 !samples/README.md
@@ -14,9 +17,14 @@ reference/media/
 *[Cc]hat*[Hh]istory*
 *chat*history*
 
-# --- Report app runtime data (state, logo, exports) ---
+# --- Report app runtime data (state, logo, uploads, exports) ---
 app/data/*
 !app/data/.gitkeep
+website/data/*
+!website/data/.gitkeep
+!website/data/uploads/
+website/data/uploads/*
+!website/data/uploads/.gitkeep
 
 # --- Python ---
 __pycache__/
@@ -88,11 +96,24 @@ ehthumbs.db
 *.tmp
 *.temp
 .cache/
+*.pid
+*.seed
 
 # --- PHP / web (local preview artefacts) ---
 vendor/
 !app/static/vendor/
 !app/static/vendor/**
+composer.phar
+php.ini
+php_errors.log
+session_data/
+# PHP session files that may appear under website/
+website/**/sess_*
+
+# --- Node (if added later) ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
 
 # --- Archives (manual drops, backups) ---
 *.zip

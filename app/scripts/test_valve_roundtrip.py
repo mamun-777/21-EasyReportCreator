@@ -43,12 +43,9 @@ def main() -> None:
     rows = apply_template(raw, merged)
     assert len(rows) == info.counts["hand_valves"], (len(rows), info.counts["hand_valves"])
 
-    try:
-        workbook = export_workbook(rows, merged, info.__dict__, None)
-        assert len(workbook) > 5000
-        print("OK valve round-trip:", len(rows), "rows,", len(workbook), "bytes xlsx")
-    except AttributeError:
-        print("OK valve round-trip:", len(rows), "rows (excel skipped: narrow column layout)")
+    workbook = export_workbook(rows, merged, info.__dict__, None)
+    assert len(workbook) > 5000
+    print("OK valve round-trip:", len(rows), "rows,", len(workbook), "bytes xlsx")
 
 if __name__ == "__main__":
     main()
