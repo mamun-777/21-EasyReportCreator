@@ -320,11 +320,11 @@ def line_summary(con: sqlite3.Connection) -> list[dict[str, Any]]:
         + """
         SELECT
             plg.PnPID,
-            plg.LineNumber,
+            COALESCE(NULLIF(TRIM(plg.LineNumber), ''), plg.Tag) AS LineNumber,
             plg.Tag,
-            plg.Service,
-            plg.NominalSize AS Size,
-            plg.NominalSpec AS Spec,
+            COALESCE(NULLIF(TRIM(plg.Service), ''), '') AS Service,
+            COALESCE(NULLIF(TRIM(plg.NominalSize), ''), MAX(NULLIF(TRIM(pl.Size), ''))) AS Size,
+            COALESCE(NULLIF(TRIM(plg.NominalSpec), ''), MAX(NULLIF(TRIM(pl.Spec), ''))) AS Spec,
             plg.Status,
             GROUP_CONCAT(DISTINCT d.PnID) AS PnID,
             COUNT(DISTINCT pl.PnPID) AS SegmentCount
@@ -334,7 +334,7 @@ def line_summary(con: sqlite3.Connection) -> list[dict[str, Any]]:
         LEFT JOIN dwg ON dwg.RowId = pl.PnPID
         LEFT JOIN PnPDrawings d ON d.PnPID = dwg.DwgId
         GROUP BY plg.PnPID
-        ORDER BY plg.LineNumber
+        ORDER BY LineNumber, plg.Tag
         """,
     )
 

@@ -32,11 +32,12 @@ Open http://127.0.0.1:8765 — the sample project path is filled in automaticall
 ```bat
 cd app
 python scripts/test_list_counts.py
+python scripts/test_wp6_thu_lists.py
 python scripts/test_valve_roundtrip.py
 python scripts/test_excel_export.py
 ```
 
-Expected on MN-P-RHN-PID-0001: 344 hand valves, 80 equipment, 611 pipe lines.
+Expected on MN-P-RHN-PID-0001: 344 hand valves, 80 equipment, 611 pipe lines, 43 control valves, 126 instruments, 30 drawings, 386 line groups.
 
 ## Notes
 

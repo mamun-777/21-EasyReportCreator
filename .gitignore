@@ -22,9 +22,13 @@ app/data/*
 !app/data/.gitkeep
 website/data/*
 !website/data/.gitkeep
+!website/data/.htaccess
+!website/data/web.config
 !website/data/uploads/
 website/data/uploads/*
 !website/data/uploads/.gitkeep
+!website/data/uploads/.htaccess
+!website/data/uploads/web.config
 
 # --- Python ---
 __pycache__/

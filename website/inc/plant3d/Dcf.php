@@ -75,6 +75,7 @@ final class ErcDcf
                 'pipe_lines' => self::tableCount($pdo, 'PipeLines'),
                 'line_groups' => self::tableCount($pdo, 'PipeLineGroup'),
                 'engineering_items' => self::tableCount($pdo, 'EngineeringItems'),
+                'components' => self::componentCount($pdo),
             ],
         ];
         $info['drawing_count'] = $info['counts']['drawings'];
@@ -95,5 +96,17 @@ final class ErcDcf
         }
 
         return ['project' => $info, 'dcf_path' => $dcfPath];
+    }
+
+    /** Count EngineeringItems excluding pipe-line classes (matches components query). */
+    public static function componentCount(PDO $pdo): int
+    {
+        if (!self::tableExists($pdo, 'EngineeringItems')) {
+            return 0;
+        }
+        return (int) $pdo->query(
+            "SELECT COUNT(*) FROM EngineeringItems
+             WHERE ClassName NOT IN ('Minor Pipe Line', 'Major Pipe Line', 'Pipe Line Group')"
+        )->fetchColumn();
     }
 }

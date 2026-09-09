@@ -14,10 +14,8 @@ $description = $description ?? 'Friendlier Plant 3D lists in Excel — without A
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= h($title) ?></title>
 <meta name="description" content="<?= h($description) ?>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/fonts.css?v=20260908b">
+<link rel="stylesheet" href="assets/styles.css?v=20260908b">
 </head>
 <body>
 
@@ -29,9 +27,9 @@ $description = $description ?? 'Friendlier Plant 3D lists in Excel — without A
       <a href="product.php" class="<?= is_active('product', $page) ? 'active' : '' ?>">Product</a>
       <a href="pricing.php" class="<?= is_active('pricing', $page) ? 'active' : '' ?>">Pricing</a>
       <a href="download.php" class="<?= is_active('download', $page) ? 'active' : '' ?>">Download</a>
-      <a href="report/" class="<?= is_active('report', $page) ? 'active' : '' ?>">Report app</a>
+      <a href="report/login.php" class="<?= is_active('report', $page) ? 'active' : '' ?>">Report app</a>
       <a href="contact.php" class="<?= is_active('contact', $page) ? 'active' : '' ?>">Contact</a>
     </nav>
-    <a href="report/" class="btn">Open the app</a>
+    <a href="report/login.php" class="btn">Open the app</a>
   </div>
 </header>

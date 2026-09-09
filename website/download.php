@@ -27,7 +27,7 @@ require __DIR__ . '/inc/header.php';
         </p>
         <p class="download-note">Open the report app, upload <code>ProcessPower.dcf</code> from your project folder, then preview and export. Typical file size is only a few MB.</p>
         <div class="download-actions">
-          <a class="btn" href="report/">Open report app</a>
+          <a class="btn" href="report/login.php">Open report app</a>
           <a href="product.php" class="btn ghost">How it works</a>
         </div>
       </div>

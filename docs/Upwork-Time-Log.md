@@ -1,7 +1,7 @@
 # EasyReportCreator — Upwork time log
 
-**Start:** Wed 19 Aug 2026 · **Finish:** Wed 9 Sep 2026  
-**Calendar:** 16 working days × **8 h** = 128 h (3 weeks × 5 days + **1 day**)  
+**Start:** Wed 19 Aug 2026 · **Finish:** Thu 10 Sep 2026  
+**Calendar:** 17 working days × **8 h** = 136 h (3 weeks × 5 days + **2 days**)  
 **Deliverable budget:** 100 h (fixed-price scope)  
 **Deployment:** **Web app on STRATO** — user uploads `ProcessPower.dcf` (locked with client Tue 1 Sep)
 
@@ -95,7 +95,7 @@ Full schedule: `Delivery-Schedule.md`
 
 ---
 
-## Week 3 · Wed 2 – Wed 9 Sep
+## Week 3 · Wed 2 – Thu 10 Sep
 
 ### Wed 2 Sep · 8 h · WP6 · check-in
 
@@ -115,30 +115,36 @@ Full schedule: `Delivery-Schedule.md`
 
 ### Fri 4 Sep · 8 h · WP6 / WP7
 
-**AM (4 h):** Componentenlijst query + export. Regression on all eight list types.
+**AM (4 h):** Componentenlijst query + Excel export. Regression on all eight list types.
 
-**PM (4 h):** Replace dark sidebar with light top nav. Apply shared tokens in app UI.
+**PM (4 h):** Light report UI: shared tokens, Space Grotesk title bar, sidebar list counts.
 
 ---
 
 ### Mon 7 Sep · 8 h · WP7 / WP8
 
-**AM (4 h):** Match public site typography/cards. Dashboard + project card polish.
+**AM (4 h):** Matched public site tokens/type. Project card + list-count dashboard strip.
 
-**PM (4 h):** Flow polish: upload DCF → list → columns → preview → export.
+**PM (4 h):** Flow polish: upload zone, steps, empty states, drag-drop DCF → list → export.
 
 ---
 
 ### Tue 8 Sep · 8 h · WP8
 
-**AM (4 h):** STRATO deploy: hosted web app, DCF upload limits, session cleanup.
+**AM (4 h):** Remote VPS setup: IIS site, PHP 8.3 FastCGI, 80 MB uploads, session cleanup.
 
-**PM (4 h):** HTTPS smoke-test on easyreportcreator.com. Upload + list round-trip on STRATO.
+**PM (4 h):** Deployed website to STRATO; smoke-test home + login. DNS/HTTPS next when A-record ready.
 
 ---
 
-### Wed 9 Sep · 8 h · WP8–WP10 · handover
+### Wed 9 Sep · 8 h · WP8–WP10 · acceptance + packaging
 
 **AM (4 h):** Deploy notes + short user guide (upload workflow).
 
-**PM (4 h):** Acceptance on MN-P-RHN-PID-0001 via web upload. Package for Jan feedback. Handover.
+**PM (4 h):** Acceptance on MN-P-RHN-PID-0001 via web upload. Package for final handover.
+
+### Thu 10 Sep · 8 h · WP10 · handover
+
+**AM (4 h):** Final UX/export checks + deployment notes polish.
+
+**PM (4 h):** Last UAT pass + final handover package for Jan feedback.

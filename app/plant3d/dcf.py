@@ -94,6 +94,20 @@ def table_count(con: sqlite3.Connection, name: str) -> int:
     return int(con.execute(f"SELECT COUNT(*) FROM [{name}]").fetchone()[0])
 
 
+def _component_count(con: sqlite3.Connection) -> int:
+    """Count EngineeringItems excluding pipe-line classes (matches components query)."""
+    if not table_exists(con, "EngineeringItems"):
+        return 0
+    return int(
+        con.execute(
+            """
+            SELECT COUNT(*) FROM EngineeringItems
+            WHERE ClassName NOT IN ('Minor Pipe Line', 'Major Pipe Line', 'Pipe Line Group')
+            """
+        ).fetchone()[0]
+    )
+
+
 def _xml_text(project_dir: Path) -> tuple[str, str]:
     xml = project_dir / "Project.xml"
     if not xml.exists():
@@ -138,6 +152,7 @@ def load_project(path: str | Path, *, include_drawings: bool = True) -> tuple[Pr
             "pipe_lines": table_count(con, "PipeLines"),
             "line_groups": table_count(con, "PipeLineGroup"),
             "engineering_items": table_count(con, "EngineeringItems"),
+            "components": _component_count(con),
         }
         info.drawing_count = info.counts["drawings"]
 

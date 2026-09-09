@@ -1,4 +1,4 @@
-"""WP6 — validate valve, equipment, and line list row counts vs sample DCF."""
+"""WP6 — validate core list row counts vs sample DCF (Wed–Thu lists)."""
 from __future__ import annotations
 
 import sys
@@ -17,6 +17,11 @@ CHECKS = [
     ("valve_list", "valves", "hand_valves"),
     ("equipment_list", "equipment", "equipment"),
     ("line_list", "lines", "pipe_lines"),
+    ("control_valve_list", "control_valves", "control_valves"),
+    ("instrument_list", "instruments", "instruments"),
+    ("drawing_list", "drawings", "drawings"),
+    ("line_summary", "line_summary", "line_groups"),
+    ("component_list", "components", "components"),
 ]
 
 
@@ -34,12 +39,11 @@ def main() -> None:
             expected = info.counts[count_key]
             assert len(raw) == expected, f"{source}: raw {len(raw)} != count {expected}"
             assert len(rows) == expected, (
-                f"{resolved}: projected {len(rows)} != count {expected} "
-                f"(visible cols may still keep all rows)"
+                f"{resolved}: projected {len(rows)} != count {expected}"
             )
             print(f"OK {source}: {len(raw)} raw / {len(rows)} projected ({resolved})")
 
-    print("OK WP6 list counts: valves, equipment, lines")
+    print("OK WP6 list counts (8 list types)")
 
 
 if __name__ == "__main__":

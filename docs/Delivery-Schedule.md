@@ -3,14 +3,14 @@
 | Field | Value |
 |---|---|
 | Start | **Wednesday 19 August 2026** |
-| Finish | **Wednesday 9 September 2026** |
+| Finish | **Thursday 10 September 2026** |
 | Deliverable budget | **100 hours** (WP total — unchanged) |
-| Upwork calendar | **16 working days × 8 h = 128 h** (3 weeks + 1 day) |
-| Week shape | **5 working days per week**, Mon–Fri blocks (Wed-start); **+1 day** Wed 9 Sep |
+| Upwork calendar | **17 working days × 8 h = 136 h** (3 weeks + 2 days) |
+| Week shape | **5 working days per week**, Mon–Fri blocks (Wed-start); **+2 days** Wed 9 Sep + Thu 10 Sep |
 | Daily pace | **8 h every working day** (4 h AM + 4 h PM on Upwork) |
 | **Deployment (locked Tue 1 Sep)** | **Web app on STRATO** — user **uploads** `ProcessPower.dcf`; no desktop installer / code signing for V1 |
 
-Each week is a **5-day block** (Wed → Tue) because the project starts mid-week. Weekends are always off. **Wed 9 Sep** is an extra working day for STRATO hosted-app deploy and handover.
+Each week is a **5-day block** (Wed → Tue) because the project starts mid-week. Weekends are always off. **Wed 9 Sep** and **Thu 10 Sep** are extra working days for STRATO hosted-app deploy and handover.
 
 Upwork copy-paste lines: **`Upwork-Time-Log.md`** and **section 4** below (≤ 120 characters each).
 
@@ -33,7 +33,7 @@ Upwork copy-paste lines: **`Upwork-Time-Log.md`** and **section 4** below (≤ 1
 | — | Coordination / check-ins | **2** |
 | | **Total** | **100** |
 
-The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRATO deploy, upload flow hardening, and handover while you log a full 8 h day on Upwork every working day.
+The **136 h calendar** (17 × 8 h) includes the **+2 days** (Wed 9 Sep + Thu 10 Sep) for STRATO deploy, upload flow hardening, and handover while you log a full 8 h day on Upwork every working day.
 
 ---
 
@@ -43,8 +43,8 @@ The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRAT
 |---|---|---:|---|
 | **1** | Wed 19 – Tue 25 Aug | **40** | Architecture, PHP site, Project Details header |
 | **2** | Wed 26 Aug – Tue 1 Sep | **40** | Column picker, templates, Excel, first lists |
-| **3** | Wed 2 – **Wed 9 Sep** | **48** | Remaining lists, light UI, **STRATO web app + DCF upload**, docs, UAT / handover |
-| | | **128** | **100 h** scope complete by **Wed 9 Sep** |
+| **3** | Wed 2 – **Thu 10 Sep** | **56** | Remaining lists, light UI, **STRATO web app + DCF upload**, docs, UAT / handover |
+| | | **136** | **100 h** scope complete by **Thu 10 Sep** |
 
 ---
 
@@ -70,7 +70,7 @@ The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRAT
 | **Mon 31 Aug** | 8 | WP4 | Company-standard templates: create, overwrite, load. Eight list defaults. |
 | **Tue 1 Sep** | 8 | WP5 | Excel export: logo, title block, revision table, English issue layout. **Client locks web app + DCF upload on STRATO.** |
 
-### Week 3 — Wed 2 – Wed 9 Sep (48 h)
+### Week 3 — Wed 2 – Thu 10 Sep (56 h)
 
 | Date | h | WP | Work |
 |---|---:|---|---|
@@ -79,7 +79,8 @@ The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRAT
 | **Fri 4 Sep** | 8 | WP6, WP7 | Componentenlijst. Start light app UI (top nav, shared tokens). |
 | **Mon 7 Sep** | 8 | WP7, WP8 | Finish light UI. Flow polish: upload → list → columns → preview → export. |
 | **Tue 8 Sep** | 8 | WP8 | Deploy hosted web app on STRATO. DCF upload, session storage, HTTPS smoke-test. |
-| **Wed 9 Sep** | 8 | WP8–WP10 | Deploy notes, user guide (upload workflow). Acceptance via web upload. **Handover.** |
+| **Wed 9 Sep** | 8 | WP8–WP10 | Deploy notes, user guide (upload workflow). Acceptance via web upload. |
+| **Thu 10 Sep** | 8 | WP10 | Final user guide polish + last UAT pass. **Handover.** |
 
 ---
 
@@ -99,10 +100,11 @@ The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRAT
 | Tue 1 Sep | 8 | Excel title block from selected Project Details. Logo in workbook. | Revision table in Excel. English issued layout. Client confirms STRATO web + upload. |
 | Wed 2 Sep | 8 | Harden valve list on MN-P-RHN-PID-0001. Validate row counts vs sample. | Equipment + line lists hardened. Week 2 check-in with client. |
 | Thu 3 Sep | 8 | Control valve + instrument lists on sample project. | Drawing list + line summary export tests on sample DCF. |
-| Fri 4 Sep | 8 | Componentenlijst query + export. Regression on all eight list types. | Replace dark sidebar with light top nav. Apply shared tokens in app UI. |
-| Mon 7 Sep | 8 | Match public site typography/cards. Dashboard + project card polish. | Flow polish: upload DCF → list → columns → preview → export. |
-| Tue 8 Sep | 8 | STRATO deploy: hosted web app, DCF upload limits, session cleanup. | HTTPS smoke-test on easyreportcreator.com. Upload + list round-trip on STRATO. |
-| Wed 9 Sep | 8 | Deploy notes + short user guide (upload workflow). | Acceptance on MN-P-RHN-PID-0001 via web upload. Package for Jan feedback. Handover. |
+| Fri 4 Sep | 8 | Componentenlijst query + Excel export. Regression on all eight lists. | Light UI: shared tokens, Space Grotesk title bar, sidebar counts. |
+| Mon 7 Sep | 8 | Matched public site tokens/type. Project card + list-count dashboard. | Flow polish: upload zone, steps, empty states, drag-drop → export. |
+| Tue 8 Sep | 8 | Remote VPS: IIS site, PHP 8.3 FastCGI, 80 MB uploads, session cleanup. | Deployed to STRATO; smoke-test OK. DNS/HTTPS when A-record ready. |
+| Wed 9 Sep | 8 | Deploy notes + short user guide (upload workflow). | Acceptance on MN-P-RHN-PID-0001 via web upload. Package for Jan feedback. |
+| Thu 10 Sep | 8 | Final UX/export checks + handover prep. | Handover to Jan + deployment notes locked. |
 
 ---
 
@@ -122,10 +124,10 @@ The **128 h calendar** (16 × 8 h) includes the **+1 day** (Wed 9 Sep) for STRAT
 
 1. Log **8 h on Upwork** every working day (4 h AM + 4 h PM).
 2. Prove engine changes on `samples/MN-P-RHN-PID-0001` the same day (local dev until STRATO deploy on Tue 8 Sep).
-3. Check-ins: end of **Wed 26 Aug**, **Wed 2 Sep**, **Wed 9 Sep** (handover).
+3. Check-ins: end of **Wed 26 Aug**, **Wed 2 Sep**, **Thu 10 Sep** (handover).
 
 ---
 
 ## 7. Slip rule
 
-If scope slips, use **Tue 8 – Wed 9 Sep** before dropping WP3 (property selection). Do not cut the 8 h working-day shape. The **+1 day (Wed 9 Sep)** is reserved for STRATO hosted-app deploy and handover.
+If scope slips, use **Tue 8 – Thu 10 Sep** before dropping WP3 (property selection). Do not cut the 8 h working-day shape. The **+2 days (Wed 9 + Thu 10 Sep)** are reserved for STRATO hosted-app deploy and handover.

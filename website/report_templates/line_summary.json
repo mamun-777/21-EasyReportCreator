@@ -51,42 +51,56 @@
     {
       "key": "LineNumber",
       "header": "Leidingnummer",
+      "header_en": "Line number",
       "width": 18,
+      "visible": true
+    },
+    {
+      "key": "Tag",
+      "header": "Tag",
+      "header_en": "Tag",
+      "width": 16,
       "visible": true
     },
     {
       "key": "Service",
       "header": "Service",
+      "header_en": "Service",
       "width": 16,
       "visible": true
     },
     {
       "key": "Size",
       "header": "Nominale maat",
+      "header_en": "Size",
       "width": 14,
       "visible": true
     },
     {
       "key": "Spec",
       "header": "Nominale spec",
+      "header_en": "Spec",
       "width": 14,
       "visible": true
     },
     {
       "key": "Status",
       "header": "Status",
+      "header_en": "Status",
       "width": 12,
       "visible": true
     },
     {
       "key": "SegmentCount",
       "header": "Segmenten",
+      "header_en": "Segments",
       "width": 12,
       "visible": true
     },
     {
       "key": "PnID",
       "header": "Bladen",
+      "header_en": "Drawings",
       "width": 20,
       "visible": true
     }

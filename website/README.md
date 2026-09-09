@@ -24,7 +24,8 @@ PHP 8 product site **and** hosted report engine for STRATO. Light theme only.
 | `download.php` | How to open the web app |
 | `contact.php` | Support |
 | `terms.php` | Delivery scope |
-| `report/index.php` | Upload → lists → Excel |
+| `report/login.php` | Company sign-in / register |
+| `report/index.php` | Upload → lists → Excel (auth required) |
 
 ## Local preview
 

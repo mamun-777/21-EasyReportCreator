@@ -254,8 +254,13 @@ SQL;
     {
         return self::fetch($pdo, self::LINE_REL_CTE . <<<'SQL'
         SELECT
-            plg.PnPID, plg.LineNumber, plg.Tag, plg.Service,
-            plg.NominalSize AS Size, plg.NominalSpec AS Spec, plg.Status,
+            plg.PnPID,
+            COALESCE(NULLIF(TRIM(plg.LineNumber), ''), plg.Tag) AS LineNumber,
+            plg.Tag,
+            COALESCE(NULLIF(TRIM(plg.Service), ''), '') AS Service,
+            COALESCE(NULLIF(TRIM(plg.NominalSize), ''), MAX(NULLIF(TRIM(pl.Size), ''))) AS Size,
+            COALESCE(NULLIF(TRIM(plg.NominalSpec), ''), MAX(NULLIF(TRIM(pl.Spec), ''))) AS Spec,
+            plg.Status,
             GROUP_CONCAT(DISTINCT d.PnID) AS PnID,
             COUNT(DISTINCT pl.PnPID) AS SegmentCount
         FROM PipeLineGroup plg
@@ -264,7 +269,7 @@ SQL;
         LEFT JOIN dwg ON dwg.RowId = pl.PnPID
         LEFT JOIN PnPDrawings d ON d.PnPID = dwg.DwgId
         GROUP BY plg.PnPID
-        ORDER BY plg.LineNumber
+        ORDER BY LineNumber, plg.Tag
         SQL);
     }
 

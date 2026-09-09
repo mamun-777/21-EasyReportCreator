@@ -83,7 +83,7 @@ header {
   border-radius: var(--radius-sm);
 }
 .logo .mark::before { content: "ER"; }
-.logo .dim { color: var(--muted); font-weight: 400; }
+.logo .dim { color: var(--muted); font-weight: 400; font-family: inherit; }
 
 nav.links { display: flex; gap: 30px; font-size: 14px; font-weight: 500; }
 nav.links a {
@@ -125,8 +125,12 @@ nav.links a:hover, nav.links a.active { color: var(--text); border-color: var(--
 }
 .eyebrow::before { content: ''; width: 22px; height: 2px; background: var(--accent); }
 
+h1, h2, h3, .logo, .plan-name, .plan-price, .feature h3, .step h3, .faq-item h3, .diff-meta b {
+  font-family: var(--font-display);
+  font-synthesis: none;
+}
 h1 {
-  font-family: var(--font-display); font-weight: 700;
+  font-weight: 700;
   font-size: clamp(36px, 4.4vw, 58px);
   line-height: 1.06; letter-spacing: -0.02em;
   margin-bottom: 22px;
