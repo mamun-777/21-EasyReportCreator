@@ -108,8 +108,12 @@ if (-not (Test-Path "IIS:\AppPools\$siteName")) {
 Set-ItemProperty "IIS:\AppPools\$siteName" -Name managedRuntimeVersion -Value ""
 Set-ItemProperty "IIS:\AppPools\$siteName" -Name enable32BitAppOnWin64 -Value $false
 
+icacls "$sitePath\data" /grant "NT AUTHORITY\IUSR:(OI)(CI)M" /T | Out-Null
 icacls "$sitePath\data" /grant "IIS_IUSRS:(OI)(CI)M" /T | Out-Null
 icacls "$sitePath\data" /grant "IIS AppPool\${siteName}:(OI)(CI)M" /T | Out-Null
+
+# Anonymous auth as app-pool identity (avoids IUSR-only ACL surprises)
+& $appcmd set config $siteName -section:system.webServer/security/authentication/anonymousAuthentication /userName:"" /password:"" /commit:apphost | Out-Null
 
 if (Get-Website -Name $siteName -ErrorAction SilentlyContinue) {
   Remove-Website -Name $siteName

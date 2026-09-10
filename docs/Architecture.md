@@ -47,25 +47,37 @@ Python under `app/` is retained for **local development and regression scripts**
 ├── website/                   ★ Deploy this folder to STRATO
 │   ├── *.php                  Marketing pages
 │   ├── report/                Report UI + api.php
-│   ├── inc/plant3d/           DCF, queries, templates, Excel
-│   ├── report_templates/      Company list JSON
+│   ├── inc/plant3d/           DCF, Queries, Templates, Excel, Auth, Catalog (FB-001)
+│   ├── report_templates/      Default list JSON (not the full property universe)
 │   └── data/uploads/          Session DCF storage (writable)
 ├── app/                       Python reference + tests (not deployed to STRATO)
-├── samples/                   Local acceptance fixtures (gitignored DCF)
+│   └── plant3d/catalog.py     Reference property discovery (port → Catalog.php)
+├── samples/                   Local QA fixtures (gitignored .dcf)
+│   ├── MN-P-RHN-PID-0001/     Vitens — regression counts only
+│   └── _incoming/             Client-emailed projects before naming
 ├── shared/                    Design tokens
-└── docs/                      Requirements, schedule, STRATO-Deploy.md
+└── docs/
+    ├── qa/                    ★ Client feedback log + FB tickets (UAT)
+    ├── STRATO-Deploy.md
+    ├── User-Guide.md
+    └── …
 ```
+
+**Multi-project rule (FB-001):** Vitens/`MN-P-RHN-PID-0001` validates list counts. Column catalogues must come from the **uploaded** DCF Engineering Items metadata (standard + user-defined), not from Vitens-only template keys.
 
 ---
 
 ## 4. Report flow (V1)
 
 1. User opens `/report/`
-2. Uploads `ProcessPower.dcf`
+2. Uploads `ProcessPower.dcf` (any Plant 3D project)
 3. Chooses a list template (valve, equipment, line, …)
-4. Previews rows; exports English Excel
+4. Selects columns from the **live property catalogue** for that project’s classes (R9 / FB-001)
+5. Previews rows; exports English Excel
 
 Write-back to the live DCF stays out of this package.
+
+**Gap until FB-001 ships:** PHP still uses fixed template/SQL columns; other projects may error or show unknown properties. See `docs/qa/FB-001-engineering-items-properties.md`.
 
 ---
 
@@ -84,3 +96,4 @@ Deploy notes: **`docs/STRATO-Deploy.md`**.
 3. Excel export includes title metadata and English headers.
 4. HTTPS works on easyreportcreator.com.
 5. Desktop / no-upload noted as future option only.
+6. **FB-001 / UAT-2:** second sample DCF uploads without errors; user can select all Engineering Items properties for a list (standard + user-defined). Client feedback: `docs/qa/`.

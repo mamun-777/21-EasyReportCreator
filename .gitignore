@@ -5,19 +5,42 @@
 # --- Local toolchains (portable PHP, etc.) — never commit ---
 .tools/
 
-# --- Plant 3D project folders (copy locally; ~60 MB+ per project) ---
-samples/*
+# --- Plant 3D sample projects (local only; .dcf and full project trees) ---
+# Ignore all sample content, then allow only README.md files for docs.
+samples/**
+!samples/**/
 !samples/README.md
+!samples/**/README.md
 
-# --- Reference material (correspondence, demo video) ---
+# Extra safety if a sample folder is force-added:
+samples/**/*.xml
+samples/**/*.txt
+samples/**/*.dwg
+samples/**/*.dcf
+samples/**/*.bak
+samples/**/*.lock
+samples/**/Isometric/**
+samples/**/Orthos/**
+samples/**/PID*/**
+samples/**/ReportFiles/**
+samples/**/ReportTemplates/**
+samples/**/StringTables/**
+samples/**/ImportExportSettings/**
+samples/**/Project Recycle Bin/**
+
+# --- Reference material (correspondence, demo video, large assets) ---
 reference/correspondence/
 reference/media/
+reference/**/*.mp4
+reference/**/*.mov
+reference/**/*.avi
+reference/**/*.pdf
 
 # Chat exports (may appear outside reference/)
 *[Cc]hat*[Hh]istory*
 *chat*history*
 
-# --- Report app runtime data (state, logo, uploads, exports) ---
+# --- Report app runtime data (state, logo, uploads, exports, auth DB) ---
 app/data/*
 !app/data/.gitkeep
 website/data/*
@@ -29,6 +52,21 @@ website/data/uploads/*
 !website/data/uploads/.gitkeep
 !website/data/uploads/.htaccess
 !website/data/uploads/web.config
+website/data/companies/
+website/data/auth.sqlite
+website/data/auth.sqlite-*
+website/data/*.sqlite
+website/data/logo.png
+website/data/logo.jpg
+website/data/logo.jpeg
+website/data/logo.webp
+
+# SQLite / local DBs anywhere
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.db
 
 # --- Python ---
 __pycache__/
@@ -51,8 +89,10 @@ htmlcov/
 .coverage
 coverage.xml
 
-# --- Generated Excel exports ---
+# --- Generated Excel / Office exports ---
 *.xlsx
+*.xls
+*.xlsm
 
 # --- Plant 3D / AutoCAD binaries (if placed outside samples/) ---
 *.dcf
@@ -65,6 +105,7 @@ coverage.xml
 *.isf
 Project.xml.lock
 projSymbolStyle.bak
+projSymbolStyle.dwg
 
 # Safe demo write-back copy (never commit real project DCF)
 *demo-writeback*
@@ -74,12 +115,16 @@ projSymbolStyle.bak
 *.doc
 ~$*
 
-# --- Environment & secrets ---
+# --- Environment & secrets / deploy helpers ---
 .env
 .env.*
 !.env.example
 *.pem
 *.key
+*_ssh_*.py
+*_deploy_*.py
+*credentials*
+*secrets*
 
 # --- OS junk ---
 .DS_Store
@@ -102,6 +147,9 @@ ehthumbs.db
 .cache/
 *.pid
 *.seed
+*.cookie
+*cookies*.txt
+erc-*-cookies.txt
 
 # --- PHP / web (local preview artefacts) ---
 vendor/
@@ -119,9 +167,11 @@ node_modules/
 npm-debug.log*
 yarn-error.log*
 
-# --- Archives (manual drops, backups) ---
+# --- Archives / deploy packs (manual drops, backups) ---
 *.zip
 *.7z
 *.rar
 *.tar
 *.gz
+*.tgz
+website-staging/

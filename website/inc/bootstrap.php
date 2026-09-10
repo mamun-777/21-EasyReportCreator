@@ -15,6 +15,7 @@ const ERC_LOGO_PNG = ERC_DATA . '/logo.png';
 const ERC_LOGO_JPG = ERC_DATA . '/logo.jpg';
 
 require_once __DIR__ . '/plant3d/Dcf.php';
+require_once __DIR__ . '/plant3d/Catalog.php'; // FB-001 — before Queries (safe column helpers)
 require_once __DIR__ . '/plant3d/Queries.php';
 require_once __DIR__ . '/plant3d/Templates.php';
 require_once __DIR__ . '/plant3d/Project.php';

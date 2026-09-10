@@ -163,7 +163,7 @@ $displayName = htmlspecialchars($user['display_name'], ENT_QUOTES, 'UTF-8');
     <form method="dialog" class="dialog panel">
       <div class="panel-bar"><span class="key">Columns</span><span class="file">This list only</span></div>
       <div class="dialog-body">
-        <p class="muted">Choose which columns appear in the preview and Excel export for this list.</p>
+        <p class="muted">Choose which columns appear in the preview and Excel export. The list includes <strong>all properties</strong> from this project’s Engineering Items class (standard and user-defined).</p>
         <div id="column-checks" class="field-groups column-checks"></div>
         <menu>
           <button value="cancel" class="btn ghost">Cancel</button>
@@ -222,6 +222,6 @@ $displayName = htmlspecialchars($user['display_name'], ENT_QUOTES, 'UTF-8');
     </form>
   </dialog>
 
-  <script src="assets/report.js?v=20260908c"></script>
+  <script src="assets/report.js?v=20260910a"></script>
 </body>
 </html>

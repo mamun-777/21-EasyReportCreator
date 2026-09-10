@@ -475,33 +475,78 @@ async function applyHeaderToAllLists() {
   showSuccess("Header applied", "Company header defaults now apply to every list.");
 }
 
-function columnCatalogueFromTemplate() {
+function columnCatalogueFromTemplate(extraProps = []) {
   const byKey = new Map((currentTemplate?.columns || []).map((col) => [col.key, { ...col }]));
   const sample = currentRows[0] || {};
   for (const key of Object.keys(sample)) {
     if (key === "PnPID" || byKey.has(key)) continue;
-    byKey.set(key, { key, header: key, width: 16, visible: false });
+    byKey.set(key, { key, header: key, width: 16, visible: false, from_row: true });
   }
-  return [...byKey.values()];
+  for (const prop of extraProps) {
+    const key = prop.key;
+    if (!key || key === "PnPID") continue;
+    if (!byKey.has(key)) {
+      byKey.set(key, {
+        key,
+        header: prop.label || prop.header || key,
+        header_en: prop.label || key,
+        width: 16,
+        visible: false,
+        from_catalogue: true,
+      });
+    } else {
+      const cur = byKey.get(key);
+      if (!cur.header || cur.header === key) {
+        cur.header = prop.label || cur.header;
+        cur.header_en = prop.label || cur.header_en;
+      }
+      cur.from_catalogue = true;
+      byKey.set(key, cur);
+    }
+  }
+  return [...byKey.values()].sort((a, b) =>
+    String(a.header || a.key).localeCompare(String(b.header || b.key), undefined, { sensitivity: "base" })
+  );
 }
 
-function renderColumnChecks() {
+function renderColumnChecks(extraProps = []) {
   const container = $("column-checks");
-  const cols = columnCatalogueFromTemplate();
-  container.innerHTML = cols
-    .map(
-      (col) => `<label class="field-check">
+  const cols = columnCatalogueFromTemplate(extraProps);
+  const catNote = extraProps.length
+    ? `<p class="muted" style="margin:0 0 .75rem">Project catalogue: <strong>${extraProps.length}</strong> properties available for this list.</p>`
+    : "";
+  container.innerHTML =
+    catNote +
+    cols
+      .map(
+        (col) => `<label class="field-check">
         <input type="checkbox" data-key="${escapeHtml(col.key)}" data-header="${escapeHtml(col.header || col.key)}" ${col.visible !== false ? "checked" : ""} />
-        <span>${escapeHtml(col.header_en || col.header || col.key)}<small>${escapeHtml(col.key)}</small></span>
+        <span>${escapeHtml(col.header_en || col.header || col.key)}<small>${escapeHtml(col.key)}${col.from_catalogue ? " · catalogue" : ""}</small></span>
       </label>`
-    )
-    .join("");
+      )
+      .join("");
 }
 
-function openColumnsDialog() {
+async function openColumnsDialog() {
   if (!currentTemplate) return;
   renderColumnChecks();
   $("columns-dialog").showModal();
+  try {
+    const source = currentTemplate.source || "";
+    const tid = currentTemplate.id || "";
+    const query = source
+      ? `&source=${encodeURIComponent(source)}`
+      : `&template_id=${encodeURIComponent(tid)}`;
+    const cat = await api("property_catalogue", { query });
+    const props = cat.properties || [];
+    if (currentTemplate) {
+      currentTemplate.catalogue_count = cat.count;
+      currentTemplate.catalogue_class = cat.class_name;
+    }
+    renderColumnChecks(props);
+  } catch (err) {
+    showError("Property catalogue", err.message || String(err));
+  }
 }
 
 function applyColumnsToTemplate() {

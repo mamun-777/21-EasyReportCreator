@@ -80,7 +80,7 @@ The **136 h calendar** (17 × 8 h) includes the **+2 days** (Wed 9 Sep + Thu 10 
 | **Mon 7 Sep** | 8 | WP7, WP8 | Finish light UI. Flow polish: upload → list → columns → preview → export. |
 | **Tue 8 Sep** | 8 | WP8 | Deploy hosted web app on STRATO. DCF upload, session storage, HTTPS smoke-test. |
 | **Wed 9 Sep** | 8 | WP8–WP10 | Deploy notes, user guide (upload workflow). Acceptance via web upload. |
-| **Thu 10 Sep** | 8 | WP10 | Final user guide polish + last UAT pass. **Handover.** |
+| **Thu 10 Sep** | 8 | WP10 / FB-001 | UAT-2: multi-project Engineering Items properties (Jan feedback). Final polish + handover as agreed. |
 
 ---
 
@@ -104,7 +104,7 @@ The **136 h calendar** (17 × 8 h) includes the **+2 days** (Wed 9 Sep + Thu 10 
 | Mon 7 Sep | 8 | Matched public site tokens/type. Project card + list-count dashboard. | Flow polish: upload zone, steps, empty states, drag-drop → export. |
 | Tue 8 Sep | 8 | Remote VPS: IIS site, PHP 8.3 FastCGI, 80 MB uploads, session cleanup. | Deployed to STRATO; smoke-test OK. DNS/HTTPS when A-record ready. |
 | Wed 9 Sep | 8 | Deploy notes + short user guide (upload workflow). | Acceptance on MN-P-RHN-PID-0001 via web upload. Package for Jan feedback. |
-| Thu 10 Sep | 8 | Final UX/export checks + handover prep. | Handover to Jan + deployment notes locked. |
+| Thu 10 Sep | 8 | FB-001: live property catalogue from DCF (any project). | Verify on 2nd sample + handover / notes for Jan. |
 
 ---
 

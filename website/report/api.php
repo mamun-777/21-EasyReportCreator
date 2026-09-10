@@ -25,6 +25,8 @@ try {
         'details' => handle_details(),
         'report' => handle_report(),
         'export' => handle_export(),
+        'property_catalogue' => handle_property_catalogue(),
+        'class_tree' => handle_class_tree(),
         'apply_template' => handle_apply_template(),
         'save_template' => handle_save_template(),
         'logo' => handle_logo(),
@@ -262,6 +264,7 @@ function handle_report(): never
     $loadedTpl = erc_load_active_template($templateId);
     $template = $loadedTpl['template'];
     $pdo = ErcDcf::connect($dcf);
+    $template = ErcCatalog::enrichTemplateColumns($pdo, $template);
     $details = ErcProject::details($pdo);
     $merged = ErcProject::mergeHeader($template, $details);
     $raw = ErcQueries::run($pdo, (string) $merged['source']);
@@ -276,9 +279,42 @@ function handle_report(): never
         'row_count' => count($rows),
         'raw_count' => count($raw),
         'rows' => $rows,
+        'available_keys' => $raw ? array_keys($raw[0]) : [],
         'has_logo' => erc_logo_path() !== null,
         'profile' => erc_load_company_profile(),
     ]);
+}
+
+function handle_property_catalogue(): never
+{
+    $dcf = erc_current_dcf();
+    if (!$dcf) {
+        erc_error('No project uploaded.', 400);
+    }
+    $source = (string) ($_GET['source'] ?? '');
+    $templateId = (string) ($_GET['template_id'] ?? '');
+    $pdo = ErcDcf::connect($dcf);
+    if ($source === '' && $templateId !== '') {
+        $tpl = erc_load_active_template($templateId)['template'];
+        $source = (string) ($tpl['source'] ?? '');
+    }
+    if ($source === '') {
+        erc_error('source or template_id is required.');
+    }
+    $cat = ErcCatalog::propertyCatalogueForSource($pdo, $source);
+    erc_json(['ok' => true] + $cat);
+}
+
+function handle_class_tree(): never
+{
+    $dcf = erc_current_dcf();
+    if (!$dcf) {
+        erc_error('No project uploaded.', 400);
+    }
+    $root = (string) ($_GET['root'] ?? 'EngineeringItems');
+    $pdo = ErcDcf::connect($dcf);
+    $tree = ErcCatalog::classTree($pdo, $root);
+    erc_json(['ok' => true] + $tree);
 }
 
 function handle_export(): never
@@ -302,6 +338,7 @@ function handle_export(): never
     $loadedTpl = erc_load_active_template($templateId);
     $template = $loadedTpl['template'];
     $pdo = ErcDcf::connect($dcf);
+    $template = ErcCatalog::enrichTemplateColumns($pdo, $template);
     $details = ErcProject::details($pdo);
     $merged = ErcProject::mergeHeader($template, $details);
     $raw = ErcQueries::run($pdo, (string) $merged['source']);

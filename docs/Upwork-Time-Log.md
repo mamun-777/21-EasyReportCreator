@@ -139,12 +139,12 @@ Full schedule: `Delivery-Schedule.md`
 
 ### Wed 9 Sep · 8 h · WP8–WP10 · acceptance + packaging
 
-**AM (4 h):** Deploy notes + short user guide (upload workflow).
+**AM (4 h):** Deploy notes + user guide (upload workflow). Fixed IIS data-folder write ACLs (IUSR).
 
-**PM (4 h):** Acceptance on MN-P-RHN-PID-0001 via web upload. Package for final handover.
+**PM (4 h):** Live acceptance MN-P-RHN-PID-0001 (8 lists + Excel). Packaged handover docs for Jan.
 
-### Thu 10 Sep · 8 h · WP10 · handover
+### Thu 10 Sep · 8 h · WP10 / FB-001 · UAT-2 + handover
 
-**AM (4 h):** Final UX/export checks + deployment notes polish.
+**AM (4 h):** Multi-project property catalogue from Engineering Items (Jan FB-001).
 
-**PM (4 h):** Last UAT pass + final handover package for Jan feedback.
+**PM (4 h):** Verify on second sample DCF + handover notes / deploy polish.

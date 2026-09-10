@@ -184,6 +184,7 @@ The existing demo already covers a large part of R2–R7 for fixed list types. G
 | Column selection | Fixed columns per template JSON | Dynamic selection from full class property catalogue |
 | Class coverage | Selected queries (valves, equipment, lines, …) | Browse P&ID **and** Plant 3D class trees |
 | User properties | Partially mapped (Vitens Dutch fields in Componentenlijst) | **All** standard + user properties selectable |
+| Multi-project (FB-001, Sep 2026) | Vitens sample + hard-coded SQL/template keys | Any uploaded DCF; Engineering Items discovery; Vitens = regression only |
 | Packaging / certification | Local web demo | **Web app** for V1 (local/intranet); ICT checklist still pending |
 
 ---

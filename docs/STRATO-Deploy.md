@@ -2,7 +2,10 @@
 
 Locked with client **Tue 1 Sep 2026**: V1 is a **hosted web app on STRATO**. Users upload `ProcessPower.dcf`; analysis runs on the server. Desktop / no-upload remains a later option.
 
-## Live deploy status (Tue 8 Sep 2026)
+**End-user steps:** see [`User-Guide.md`](User-Guide.md).  
+**Client acceptance checklist:** see [`Handover-Package.md`](Handover-Package.md).
+
+## Live deploy status (Wed 9 Sep 2026)
 
 | Item | Value |
 |---|---|
@@ -10,17 +13,26 @@ Locked with client **Tue 1 Sep 2026**: V1 is a **hosted web app on STRATO**. Use
 | Site path | `C:\inetpub\easyreportcreator` |
 | IIS site | **EasyReportCreator** (separate from existing **ShapeDevelopAPI**) |
 | PHP | **8.3.33 NTS** at `C:\PHP` (pdo_sqlite, sqlite3, zip, mbstring, …) |
-| HTTP now | `http://easyreportcreator.com/` and `http://217.154.240.82:8080/` |
-| Host headers | `easyreportcreator.com` / `www` on ports **80** and **443** |
-| HTTPS | **Live** — Let's Encrypt via win-acme (`CN=easyreportcreator.com`); auto-renew scheduled |
-| Plesk | License present; **not installed** — deploy uses IIS + PHP directly |
+| DNS | `easyreportcreator.com` / `www` → `217.154.240.82` |
+| HTTP | `http://easyreportcreator.com/` and `http://217.154.240.82:8080/` |
+| HTTPS | **Live** — Let's Encrypt via win-acme (`CN=easyreportcreator.com`); Task Scheduler renew |
+| Fonts | Self-hosted woff2 under `assets/fonts/` (Space Grotesk, Inter, JetBrains Mono) |
+| Plesk | License present; **not installed** — production uses **IIS + PHP FastCGI** |
 
 **Do not** overwrite `C:\inetpub\wwwroot\Api` (ShapeDevelop).
 
+### Redeploy (from this PC)
+
+```powershell
+powershell -File scripts\pack-website-deploy.ps1
+# Then copy zip contents into C:\inetpub\easyreportcreator (keep data\auth.sqlite / companies if present)
+```
+
+Or sync changed files over SSH/SFTP into `C:\inetpub\easyreportcreator`. After PHP/IIS changes, recycle the **EasyReportCreator** app pool if needed.
 
 ## What to upload
 
-Upload the contents of **`website/`** to the domain document root for **easyreportcreator.com** (Plesk `httpdocs` / IIS site root — **not** the whole git repo).
+Upload the contents of **`website/`** to the IIS site root (`C:\inetpub\easyreportcreator`) — **not** the whole git repo.
 
 **Package locally:**
 
@@ -31,10 +43,6 @@ powershell -File scripts\pack-website-deploy.ps1
 Creates `dist/easyreportcreator-website-YYYYMMDD-HHMM.zip` (no `auth.sqlite`, no uploaded `.dcf`).
 
 Include:
-
-| Path | Purpose |
-|---|---|
-| `*.php`, `inc/`, `assets/` | Public marketing site |
 | `report/` | Report app UI + `api.php` |
 | `report_templates/` | List templates (JSON) |
 | `data/` | Runtime uploads (writable; do not ship sample DCFs) |
@@ -43,18 +51,31 @@ Include:
 
 Do **not** upload `app/` (Python), `samples/`, or `reference/`.
 
-## Plesk checklist (Windows VPS)
+## Plesk checklist (optional)
 
-1. In Plesk: add / point domain **easyreportcreator.com** (and www) at this VPS.
-2. Enable **HTTPS / SSL** (Let’s Encrypt in Plesk).
-3. **PHP 8.x** with extensions: **pdo_sqlite**, **sqlite3**, **zip**, **session**, **fileinfo**, **json**.
-4. Raise upload limits (typical `.dcf` a few MB; sample ~3.3 MB; app allows up to 80 MB):
-   - Plesk → PHP settings: `upload_max_filesize = 80M`, `post_max_size = 80M`, `max_execution_time = 120`, `memory_limit = 256M`
-   - IIS: `web.config` already sets `maxAllowedContentLength` to 80 MB
-   - `website/.user.ini` mirrors the same values when PHP reads user.ini
-5. Ensure `data/`, `data/uploads/`, `data/companies/` are **writable** by the IIS / Plesk PHP identity.
-6. Confirm `data/` is **not** publicly downloadable (`web.config` deny + `.htaccess` deny).
-7. Factory JSON in `report_templates/` can stay read-only; company standards land under `data/companies/`.
+Plesk is **not required** for the current V1 host (IIS + PHP). If you install Plesk later:
+
+1. Point domain **easyreportcreator.com** (and www) at this VPS.
+2. Enable HTTPS (Let’s Encrypt).
+3. PHP 8.x with **pdo_sqlite**, **sqlite3**, **zip**, **session**, **fileinfo**, **json**.
+4. Upload limits: `upload_max_filesize` / `post_max_size` = 80M (IIS `web.config` already sets 80 MB).
+5. Ensure `data/`, `data/uploads/`, `data/companies/` are writable by the site identity; `data/auth.sqlite` must be writable (not owned read-only by Administrator).
+6. Confirm `data/` is not publicly downloadable (`web.config` deny + `.htaccess` deny).
+
+### IIS write access (required)
+
+PHP on this host may run as **`NT AUTHORITY\IUSR`** (anonymous auth) and/or **`IIS APPPOOL\EasyReportCreator`**. Grant Modify on `data/` to both, and prefer empty anonymous `userName` (application pool identity):
+
+```powershell
+icacls C:\inetpub\easyreportcreator\data /grant "NT AUTHORITY\IUSR:(OI)(CI)(M)" /T
+icacls C:\inetpub\easyreportcreator\data /grant "IIS APPPOOL\EasyReportCreator:(OI)(CI)(M)" /T
+icacls C:\inetpub\easyreportcreator\data /grant "IIS_IUSRS:(OI)(CI)(M)" /T
+%windir%\system32\inetsrv\appcmd.exe set config "EasyReportCreator" -section:system.webServer/security/authentication/anonymousAuthentication /userName:"" /password:"" /commit:apphost
+```
+
+Without this, register/login fails with `unable to open database file` or `attempt to write a readonly database`.
+
+Also set `existingResponse="PassThrough"` on `httpErrors` in `web.config` so API JSON errors are not replaced by IIS HTML 500 pages.
 
 ## STRATO customer portal
 
@@ -80,6 +101,7 @@ Deferred: Excel import → demo DCF write-back; NL toggle; Flatpickr.
 | `/` | Product site (Home, Product, Pricing, …) |
 | `/report/` | Report app — upload `.dcf`, preview lists, export Excel |
 | `/report/login.php` | Sign in |
+| `/report/register.php` | Create company account |
 
 ## Privacy
 

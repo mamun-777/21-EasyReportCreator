@@ -70,7 +70,7 @@ final class ErcDcf
                 'drawings' => self::tableCount($pdo, 'PnPDrawings'),
                 'equipment' => self::tableCount($pdo, 'Equipment'),
                 'hand_valves' => self::tableCount($pdo, 'HandValves'),
-                'control_valves' => self::tableCount($pdo, 'Gestuurdeafsluiters'),
+                'control_valves' => self::controlValveCount($pdo),
                 'instruments' => self::tableCount($pdo, 'Instrumentation'),
                 'pipe_lines' => self::tableCount($pdo, 'PipeLines'),
                 'line_groups' => self::tableCount($pdo, 'PipeLineGroup'),
@@ -98,15 +98,29 @@ final class ErcDcf
         return ['project' => $info, 'dcf_path' => $dcfPath];
     }
 
-    /** Count EngineeringItems excluding pipe-line classes (matches components query). */
+    public static function controlValveCount(PDO $pdo): int
+    {
+        $table = ErcCatalog::resolveSourceTable($pdo, 'control_valves');
+        if ($table === null || !self::tableExists($pdo, $table)) {
+            return 0;
+        }
+        return self::tableCount($pdo, $table);
+    }
+
+    /** Count EngineeringItems excluding pipe-line classes / pipe tables (matches components query). */
     public static function componentCount(PDO $pdo): int
     {
         if (!self::tableExists($pdo, 'EngineeringItems')) {
             return 0;
         }
-        return (int) $pdo->query(
-            "SELECT COUNT(*) FROM EngineeringItems
-             WHERE ClassName NOT IN ('Minor Pipe Line', 'Major Pipe Line', 'Pipe Line Group')"
-        )->fetchColumn();
+        $sql = "SELECT COUNT(*) FROM EngineeringItems ei
+             WHERE ei.ClassName NOT IN ('Minor Pipe Line', 'Major Pipe Line', 'Pipe Line Group')";
+        if (self::tableExists($pdo, 'PipeLines')) {
+            $sql .= ' AND NOT EXISTS (SELECT 1 FROM PipeLines _pl WHERE _pl.PnPID = ei.PnPID)';
+        }
+        if (self::tableExists($pdo, 'PipeLineGroup')) {
+            $sql .= ' AND NOT EXISTS (SELECT 1 FROM PipeLineGroup _pg WHERE _pg.PnPID = ei.PnPID)';
+        }
+        return (int) $pdo->query($sql)->fetchColumn();
     }
 }
