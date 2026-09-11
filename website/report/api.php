@@ -114,6 +114,9 @@ function handle_profile(): never
     }
     if (isset($body['header']) && is_array($body['header'])) {
         $current['header'] = array_replace_recursive($current['header'], $body['header']);
+        if (isset($current['header']['fields']) && is_array($current['header']['fields'])) {
+            $current['header']['fields'] = erc_strip_header_field_values($current['header']['fields']);
+        }
     }
     if (isset($body['export']) && is_array($body['export'])) {
         $current['export'] = array_replace_recursive($current['export'], $body['export']);
@@ -422,8 +425,8 @@ function handle_save_template(): never
         $profile = erc_load_company_profile();
         $header = $saved['header'] ?? [];
         $profile['header']['company'] = (string) ($header['company'] ?? $profile['header']['company']);
-        $profile['header']['fields'] = $header['fields'] ?? $profile['header']['fields'];
-        if (!empty($saved['revision_table'])) {
+        $profile['header']['fields'] = erc_strip_header_field_values($header['fields'] ?? $profile['header']['fields']);
+        if (!empty($saved['revision_table']) && is_array($saved['revision_table'])) {
             $profile['header']['revision_table'] = $saved['revision_table'];
         }
         if (!empty($profile['header']['company'])) {

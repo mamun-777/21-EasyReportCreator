@@ -222,6 +222,6 @@ $displayName = htmlspecialchars($user['display_name'], ENT_QUOTES, 'UTF-8');
     </form>
   </dialog>
 
-  <script src="assets/report.js?v=20260910a"></script>
+  <script src="assets/report.js?v=20260911a"></script>
 </body>
 </html>

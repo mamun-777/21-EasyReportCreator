@@ -48,6 +48,7 @@ Script: `scripts/acceptance_web_upload.py`
 | ID | Issue | Status |
 |---|---|---|
 | [FB-001](qa/FB-001-engineering-items-properties.md) | Other projects: unknown properties / errors. Full Engineering Items property pick (standard + user-defined). Sample: P220049 Morssinkhof. | **Verify** — live deploy 2026-09-10 |
+| [FB-002](qa/FB-002-header-project-details.md) | Header not updating with uploaded project / client information. | **Verify** — live deploy 2026-09-11 |
 
 Vitens / MN-P-RHN-PID-0001 remains the **regression** sample for list counts only.
 

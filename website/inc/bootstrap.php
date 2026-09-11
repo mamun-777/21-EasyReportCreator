@@ -185,7 +185,16 @@ function erc_apply_company_defaults(array $template, array $profile): array
         $header['company'] = $profile['company_name'];
     }
     if (!empty($companyHeader['fields']) && is_array($companyHeader['fields'])) {
-        $header['fields'] = $companyHeader['fields'];
+        // Keep field selection only — values always come from the uploaded DCF (FB-002).
+        $header['fields'] = array_values(array_filter(array_map(static function ($field) {
+            if (!is_array($field) || empty($field['key'])) {
+                return null;
+            }
+            return [
+                'key' => (string) $field['key'],
+                'label' => (string) ($field['label'] ?? $field['key']),
+            ];
+        }, $companyHeader['fields'])));
     }
     if (empty($template['revision_table']) && !empty($companyHeader['revision_table'])) {
         $template['revision_table'] = $companyHeader['revision_table'];
@@ -195,6 +204,27 @@ function erc_apply_company_defaults(array $template, array $profile): array
         $template['include_pnpid'] = (bool) $profile['export']['include_pnpid'];
     }
     return $template;
+}
+
+/**
+ * Company profile stores which header fields to show — not the project-specific values (FB-002).
+ *
+ * @param list<mixed> $fields
+ * @return list<array{key: string, label: string}>
+ */
+function erc_strip_header_field_values(array $fields): array
+{
+    $out = [];
+    foreach ($fields as $field) {
+        if (!is_array($field) || empty($field['key'])) {
+            continue;
+        }
+        $out[] = [
+            'key' => (string) $field['key'],
+            'label' => (string) ($field['label'] ?? $field['key']),
+        ];
+    }
+    return $out;
 }
 
 function erc_session_upload_dir(): string

@@ -425,13 +425,11 @@ async function openHeaderDialog() {
 }
 
 async function applyHeaderToAllLists() {
+  // Persist field *selection* only; values are filled from the uploaded DCF on each report load (FB-002).
   const fields = [...$("header-field-groups").querySelectorAll("input[type=checkbox]:checked")].map((input) => ({
     key: input.dataset.key,
     label: input.dataset.label,
   }));
-  for (const field of fields) {
-    field.value = projectDetails?.values?.[field.key] || "";
-  }
   const revisionTable = readRevisionEditor();
   const company = $("hdr-company").value.trim();
   const payload = {
@@ -454,7 +452,10 @@ async function applyHeaderToAllLists() {
     },
   });
   companyProfile = data.profile;
-  if (currentTemplate) {
+  // Reload active list so title block merges live Project Details.
+  if (currentId) {
+    await loadReport(currentId);
+  } else if (currentTemplate) {
     currentTemplate.header = {
       ...(currentTemplate.header || {}),
       company: payload.header.company,
@@ -463,16 +464,13 @@ async function applyHeaderToAllLists() {
       date: payload.header.date || currentTemplate.header?.date,
     };
     if (payload.header.title) currentTemplate.header.title = payload.header.title;
-    if (payload.header.document_number) currentTemplate.header.document_number = payload.header.document_number;
-    currentTemplate.revision_table = revisionTable;
-    await persistWorkingTemplate(currentTemplate);
     renderTitleBlock(currentTemplate);
     renderRevisionTable(currentTemplate);
   }
   if (company) {
     $("company-chip").textContent = company;
   }
-  showSuccess("Header applied", "Company header defaults now apply to every list.");
+  showSuccess("Header applied", "Field selection saved. Project values come from the uploaded .dcf.");
 }
 
 function columnCatalogueFromTemplate(extraProps = []) {

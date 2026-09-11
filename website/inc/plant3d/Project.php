@@ -86,25 +86,103 @@ final class ErcProject
         return ['catalogue' => $catalogue, 'values' => $values, 'revisions' => $revisions];
     }
 
-    /** @param array<string,mixed> $template */
+    /**
+     * Fill title-block field values from the current DCF Project Details.
+     * Company field *selection* (keys/labels) is kept; values always come from this project.
+     *
+     * @param array<string,mixed> $template
+     * @param array{catalogue?: list<array<string,mixed>>, values?: array<string,string>, revisions?: list<array<string,string>>} $details
+     * @return array<string,mixed>
+     */
     public static function mergeHeader(array $template, array $details): array
     {
         $header = $template['header'] ?? [];
         $values = $details['values'] ?? [];
         $fields = [];
         foreach ($header['fields'] ?? [] as $field) {
-            $key = $field['key'] ?? '';
+            $key = (string) ($field['key'] ?? '');
+            if ($key === '') {
+                continue;
+            }
             $fields[] = [
                 'key' => $key,
-                'label' => $field['label'] ?? $key,
-                'value' => $field['value'] ?? ($values[$key] ?? ''),
+                'label' => $field['label'] ?? (self::LABELS[$key] ?? str_replace('_', ' ', $key)),
+                // FB-002: never keep stale values from company profile / previous project.
+                'value' => (string) ($values[$key] ?? ''),
             ];
         }
         $header['fields'] = $fields;
-        $template['header'] = $header;
-        if (empty($template['revision_table']) && !empty($details['revisions'])) {
-            $template['revision_table'] = $details['revisions'];
+
+        $projectNumber = trim((string) ($values['Project_Number'] ?? ''));
+        if ($projectNumber === '') {
+            $projectNumber = trim((string) ($values['Project_Name'] ?? ''));
         }
+        if ($projectNumber !== '') {
+            $listCode = self::documentListCode($template);
+            $header['document_number'] = $projectNumber . '-' . $listCode;
+        }
+
+        $template['header'] = $header;
+
+        if (!empty($details['revisions'])) {
+            $template['revision_table'] = $details['revisions'];
+        } elseif (self::isStaleDemoRevision($template['revision_table'] ?? [])) {
+            $template['revision_table'] = [[
+                'rev' => (string) ($header['revision'] ?? 'A'),
+                'date' => date('Y-m-d'),
+                'desc' => 'Issued from ' . (trim((string) ($values['Project_Name'] ?? 'uploaded project')) ?: 'uploaded project'),
+                'drawn' => '',
+                'checked' => '',
+                'approved' => '',
+            ]];
+        }
+
         return $template;
+    }
+
+    /** @param array<string,mixed> $template */
+    private static function documentListCode(array $template): string
+    {
+        $map = [
+            'drawings' => 'DL',
+            'equipment' => 'EL',
+            'valves' => 'AL',
+            'control_valves' => 'CV',
+            'instruments' => 'IL',
+            'lines' => 'LL',
+            'line_summary' => 'LS',
+            'components' => 'CL',
+        ];
+        $source = (string) ($template['source'] ?? '');
+        if (isset($map[$source])) {
+            return $map[$source];
+        }
+        $id = preg_replace('/_standard$/', '', (string) ($template['id'] ?? 'LST')) ?: 'LST';
+        $parts = explode('_', $id);
+        $letters = '';
+        foreach ($parts as $part) {
+            if ($part !== '') {
+                $letters .= strtoupper($part[0]);
+            }
+        }
+        return $letters !== '' ? $letters : 'LST';
+    }
+
+    /** @param list<array<string,mixed>>|mixed $rows */
+    private static function isStaleDemoRevision(mixed $rows): bool
+    {
+        if (!is_array($rows) || $rows === []) {
+            return true;
+        }
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $desc = strtolower((string) ($row['desc'] ?? ''));
+            if (str_contains($desc, 'demo issue') || str_contains($desc, 'processpower.dcf')) {
+                return true;
+            }
+        }
+        return false;
     }
 }
